@@ -1,0 +1,8 @@
+bazel-bin
+bazel-out
+bazel-rlwe_sa
+bazel-testlogs
+build
+.vscode
+__pycache__
+rlwe_sa.egg-info/
