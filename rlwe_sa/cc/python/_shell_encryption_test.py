@@ -1,6 +1,5 @@
-import rlwe_sa.cc.python.rlwe_sa as rlwe_sa
+import rlwe_sa.cc.python._shell_encryption as rlwe_sa
 import time
-import random
 
 def assert_encryption_decryption(input_size, ptxt_bits):
     rlwe_sec_agg = rlwe_sa.RlweSecAgg(input_size, ptxt_bits)
@@ -10,6 +9,18 @@ def assert_encryption_decryption(input_size, ptxt_bits):
     sk = rlwe_sec_agg.create_key(sk_vector)
     ciphertext = rlwe_sec_agg.encrypt(sk, plaintext)
     decrypted = rlwe_sec_agg.decrypt(sk, ciphertext)
+    assert decrypted == plaintext
+
+def assert_encryption_decryption_seed(input_size, ptxt_bits):
+    rlwe_sec_agg = rlwe_sa.RlweSecAgg(input_size, ptxt_bits)
+    plaintext = rlwe_sec_agg.sample_plaintext(input_size, ptxt_bits)
+    sk = rlwe_sec_agg.sample_key()
+    sk_vector = rlwe_sec_agg.convert_key(sk)
+    sk = rlwe_sec_agg.create_key(sk_vector)
+    ciphertext = rlwe_sec_agg.encrypt(sk, plaintext)
+    seed = rlwe_sec_agg.get_seed()
+    rlwe_sec_agg_new = rlwe_sa.RlweSecAgg(input_size, ptxt_bits, seed)
+    decrypted = rlwe_sec_agg_new.decrypt(sk, ciphertext)
     assert decrypted == plaintext
 
 
@@ -50,30 +61,22 @@ def assert_aggregation(input_size, ptxt_bits, modulus):
 def assert_multiple_aggregation(num_clients, input_size, ptxt_bits, modulus):
     encrypt_time = []
     aggregate_time = []
+    rlwe_sec_server = rlwe_sa.RlweSecAgg(input_size, ptxt_bits)
+    seed = rlwe_sec_server.get_seed()
     for i in range(num_clients):
         if i == 0:
             plaintext_sum = [0] * input_size
             len_ptxt_sum = len(plaintext_sum)
-            # check if is power of 2 otherwise add padding untill the next power of 2
-            if (len_ptxt_sum & (len_ptxt_sum - 1)) != 0:
-                next_power_of_2 = 1 << len_ptxt_sum.bit_length()
-                plaintext_sum += [0] * (next_power_of_2 - len_ptxt_sum)
-
-            rlwe_sec_agg = rlwe_sa.RlweSecAgg(len(plaintext_sum), ptxt_bits)
-            sk_sum = rlwe_sec_agg.sample_key()
-            ciphertext_sum = rlwe_sec_agg.encrypt(sk_sum, plaintext_sum)
-            sk_vector_sum = rlwe_sec_agg.convert_key(sk_sum)
+            rlwe_sec_client = rlwe_sa.RlweSecAgg(len(plaintext_sum), ptxt_bits, seed)
+            sk_sum = rlwe_sec_client.sample_key()
+            ciphertext_sum = rlwe_sec_client.encrypt(sk_sum, plaintext_sum)
+            sk_vector_sum = rlwe_sec_client.convert_key(sk_sum)
         plaintext = [1] * input_size
         len_ptxt_sum = len(plaintext)
-        # check if is power of 2 otherwise add padding untill the next power of 2
-        if (len_ptxt_sum & (len_ptxt_sum - 1)) != 0:
-            next_power_of_2 = 1 << len_ptxt_sum.bit_length()
-            plaintext += [0] * (next_power_of_2 - len_ptxt_sum)
-
-        sk = rlwe_sec_agg.sample_key()
+        sk = rlwe_sec_client.sample_key()
         start_encrypt = time.time()
-        chipertext = rlwe_sec_agg.encrypt(sk, plaintext)
-        sk_vector = rlwe_sec_agg.convert_key(sk)
+        chipertext = rlwe_sec_client.encrypt(sk, plaintext)
+        sk_vector = rlwe_sec_client.convert_key(sk)
         end_encrypt = time.time()
         time_encrypt = end_encrypt - start_encrypt
         encrypt_time.append(time_encrypt)
@@ -83,13 +86,13 @@ def assert_multiple_aggregation(num_clients, input_size, ptxt_bits, modulus):
         ]
         sk_vector_sum = [(a + b)  for a, b in zip(sk_vector_sum, sk_vector)]
         start_aggregate = time.time()
-        ciphertext_sum = rlwe_sec_agg.aggregate(ciphertext_sum, chipertext)
+        ciphertext_sum = rlwe_sec_server.aggregate(ciphertext_sum, chipertext)
         end_aggregate = time.time()
         time_aggregate = end_aggregate - start_aggregate
         aggregate_time.append(time_aggregate)
     sk_vector_sum = [a % modulus for a in sk_vector_sum]
-    sk_sum = rlwe_sec_agg.create_key(sk_vector_sum)
-    decrypted_sum = rlwe_sec_agg.decrypt(sk_sum, ciphertext_sum)
+    sk_sum = rlwe_sec_server.create_key(sk_vector_sum)
+    decrypted_sum = rlwe_sec_server.decrypt(sk_sum, ciphertext_sum)
     assert decrypted_sum == plaintext_sum
 
 

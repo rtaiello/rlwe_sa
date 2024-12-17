@@ -2,31 +2,23 @@ load("@pybind11_bazel//:build_defs.bzl", "pybind_extension")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 pybind_extension(
-    name = "rlwe_sa",  
-    srcs = ["rlwe_sa.cc"],
-    deps = ["//rlwe_sa/cc:rlwe_sa_api"],
+    name = "_shell_encryption",  
+    srcs = ["_shell_encryption.cc"],
+    deps = ["//rlwe_sa/cc:shell_encryption_api"],
 
 
 )
 
 py_test(
-    name = "rlwe_sa_test",
-    srcs = ["rlwe_sa_test.py"],
+    name = "_shell_encryption_test",
+    srcs = ["_shell_encryption_test.py"],
     deps = [
-        ":rlwe_sa"
+        ":_shell_encryption"
     ],
     python_version = "PY3",
 )
 
 py_library(
-    name = "rlwe_sa",
-    data = [":rlwe_sa.so"],
-)
-
-py_binary(
-    name = "rlwe_sa_benchmark",
-    srcs = ["rlwe_sa_benchmark.py"],
-    deps = [
-        ":rlwe_sa"
-    ],
+    name = "_shell_encryption",
+    data = [":_shell_encryption.so"],
 )

@@ -1,9 +1,9 @@
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
 cc_library(
-    name = "rlwe_sa_api",
+    name = "shell_encryption_api",
     hdrs = [
-        "rlwe_sa_api.h",
+        "shell_encryption_api.h",
     ],
     deps = [
         "//rlwe_sa/cc/shell_encryption:constants",
@@ -23,13 +23,13 @@ cc_library(
 
 )
 cc_test(
-    name = "rlwe_sa_api_test",
+    name = "shell_encryption_api_test",
     size = "medium",
     srcs = [
-        "rlwe_sa_api_test.cc",
+        "shell_encryption_api_test.cc",
     ],
     deps = [
-        ":rlwe_sa_api",
+        ":shell_encryption_api",
         "//rlwe_sa/cc/shell_encryption/testing:parameters",
         "//rlwe_sa/cc/shell_encryption/testing:status_is_fork",
         "//rlwe_sa/cc/shell_encryption/testing:status_testing",

@@ -90,6 +90,8 @@ class SymmetricRlweCiphertext {
         power_of_s_(power_of_s),
         error_(error) {}
 
+  // Method
+
   // Homomorphic addition: add the polynomials representing the ciphertexts
   // component-wise. The example below demonstrates why this procedure works
   // properly in the two-component case. The quantities a, s, m, t, and e are
@@ -586,6 +588,12 @@ class SymmetricRlweCiphertext {
 
   // Accessors.
   unsigned int Len() const { return c_.size(); }
+
+  //Num elements in the ciphertext
+  unsigned int NumCoeffs() const { return c_[0].Len(); }
+
+  // Num of bits in the modulus.
+  unsigned int LogModulus() const { return modulus_params_->log_modulus; }
 
   rlwe::StatusOr<Polynomial<ModularInt>> Component(int index) const {
     if (0 > index || index >= static_cast<int>(c_.size())) {

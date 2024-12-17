@@ -22,6 +22,7 @@
 #include "rlwe_sa/cc/shell_encryption/montgomery.h"
 #include "rlwe_sa/cc/shell_encryption/polynomial.h"
 #include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "absl/numeric/int128.h"
 
 
 #undef ASSERT_OK_AND_ASSIGN
@@ -43,15 +44,25 @@ private:
   std::unique_ptr<const rlwe::RlweContext<ModularInt>> _context_ptr; 
   std::vector<rlwe::Polynomial<ModularInt>> _as; 
   int _input_size;
+  std::string _seed;
   int _num_split;
 
-rlwe::StatusOr<std::unique_ptr<rlwe::SingleThreadHkdfPrng>>GetPrg() {
-    RLWE_ASSIGN_OR_RETURN(std::string prng_seed,
+rlwe::StatusOr<std::unique_ptr<rlwe::SingleThreadHkdfPrng>>GetPrg(std::string seed = std::string()) {
+    std::string prng_seed = std::string();
+    if (seed != std::string()) {
+         prng_seed = seed;
+    }
+    else {
+    RLWE_ASSIGN_OR_RETURN(prng_seed,
                           rlwe::SingleThreadHkdfPrng::GenerateSeed());
+      _seed = prng_seed;
+    }
     RLWE_ASSIGN_OR_RETURN(auto prng,
                           rlwe::SingleThreadHkdfPrng::Create(prng_seed));
     return prng;
 }
+
+
 std::vector<ModularInt> ConvertToMontgomery(
     const std::vector<typename ModularInt::Int>& coeffs,
     const rlwe::MontgomeryIntParams<typename ModularInt::Int>* params14) {
@@ -83,21 +94,17 @@ static std::vector<std::vector<typename ModularInt::Int>> splitVector(const std:
 }
 
 public:
-  RlweSecAgg(int input_size, size_t log_t, std::vector<rlwe::Polynomial<ModularInt>> as = {}) {
+  RlweSecAgg(int input_size, size_t log_t, std::string seed = std::string()) {
   _input_size = input_size;
   // Compute log_2 of t
    const auto& params = typename rlwe::RlweContext<ModularInt>::Parameters{
-            /*.modulus =*/static_cast<unsigned __int128>(rlwe::kModulus59),
+            /*.modulus =*/static_cast<absl::uint128>(rlwe::kModulus80),
             /*.log_n =*/11,
             /*.log_t =*/log_t,
             /*.variance =*/8};
     ASSERT_OK_AND_ASSIGN(_context_ptr, rlwe::RlweContext<ModularInt>::Create(params));
     // _context_ptr = _context;
-    if (as.size() > 0){
-      _as = as;
-    }
-    else{
-    ASSERT_OK_AND_ASSIGN(auto prng, GetPrg());
+    ASSERT_OK_AND_ASSIGN(auto prng, GetPrg(seed));
 
     _num_split = _input_size /_context_ptr->GetN() ;
     for (int i = 0; i < _num_split; i++)
@@ -106,13 +113,12 @@ public:
                                          _context_ptr->GetN(), prng.get(), _context_ptr->GetModulusParams()));
       _as.push_back(a);
     }
-    }
+    
   }
   ~RlweSecAgg() {}
 
-  // create getter for as
-  std::vector<rlwe::Polynomial<ModularInt>> GetAs() {
-    return _as;
+  std::string GetSeed() {
+    return _seed;
   }
   
   rlwe::SymmetricRlweKey<ModularInt> SampleKey() {
@@ -120,9 +126,10 @@ public:
     ASSERT_OK_AND_ASSIGN(auto key, rlwe::SymmetricRlweKey<ModularInt>::Sample(
         _context_ptr->GetLogN(), _context_ptr->GetVariance(), _context_ptr->GetLogT(),
         _context_ptr->GetModulusParams(), _context_ptr->GetNttParams(), prng.get()));
+
     return key;
   }
-
+ 
   rlwe::SymmetricRlweKey<ModularInt> SumKeys(rlwe::SymmetricRlweKey<ModularInt> key1, rlwe::SymmetricRlweKey<ModularInt> key2) {
     ASSERT_OK_AND_ASSIGN(auto key, key1.Add(key2));
     return key;

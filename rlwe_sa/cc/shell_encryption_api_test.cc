@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa_api.h"
+#include "shell_encryption_api.h"
 
 #include <algorithm>
 
@@ -41,6 +41,9 @@
 
 #include "rlwe_sa/cc/shell_encryption/testing/testing_utils.h"
 
+#include "absl/numeric/int128.h"
+
+
 namespace {
 
   using::rlwe::testing::StatusIs;
@@ -50,15 +53,9 @@ namespace {
   // Set constants.
   const int kTestingRounds = 1;
 
-  // Tests symmetric-key encryption scheme, including the following homomorphic
-  // operations: addition, scalar multiplication by a polynomial (absorb), and
-  // multiplication. Substitutions are implemented in
-  // testing/coefficient_polynomial_ciphertext.h, and SymmetricRlweKey::Substitute
-  // and SymmetricRlweCiphertext::PowersOfS() (updated on substitution calls) are
-  // further tested in testing/coefficient_polynomial_ciphertext_test.cc.
   template < typename ModularInt >
     class RlweSecAggTest: public::testing::Test {};
-  TYPED_TEST_SUITE(RlweSecAggTest, rlwe::MontgomeryInt < uint64_t > );
+  TYPED_TEST_SUITE(RlweSecAggTest, rlwe::MontgomeryInt < absl::uint128 > );
 
   // Ensure that the encryption scheme can decrypt its own ciphertexts.
   TYPED_TEST(RlweSecAggTest, CanDecrypt) {
@@ -87,6 +84,36 @@ namespace {
     }
   }
 
+
+  // Ensure that the encryption scheme can decrypt its own ciphertexts usign another matrix as
+  TYPED_TEST(RlweSecAggTest, CanDecryptWithSeed) {
+    struct rlwe_sec_agg_test {
+      int input_size;
+      int log_t;
+    };
+    std::vector < rlwe_sec_agg_test > test_cases = {
+      {
+        static_cast < int > (pow(2, 11)), 11
+      },
+      // {static_cast<int>(pow(2,15)), 13},
+      // {static_cast<int>(pow(2,15)), 15},
+    };
+    for (auto test_case: test_cases) {
+      int input_size = test_case.input_size;
+      int log_t = test_case.log_t;
+      for (unsigned int i = 0; i < kTestingRounds; i++) {
+        RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
+        std::vector < typename TypeParam::Int > plaintext = rlweSecAgg.SamplePlaintext(input_size, log_t);
+        rlwe::SymmetricRlweKey < TypeParam > key = rlweSecAgg.SampleKey();
+        std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> ciphertext = rlweSecAgg.Encrypt(key, plaintext);
+        std::string seed = rlweSecAgg.GetSeed();
+        RlweSecAgg < TypeParam > rlweSecAggNew = RlweSecAgg < TypeParam > (input_size, log_t, seed);
+        std::vector < typename TypeParam::Int > decrypted = rlweSecAggNew.Decrypt(key, ciphertext);
+        EXPECT_EQ(plaintext, decrypted);
+      }
+    }
+  }
+
   TYPED_TEST(RlweSecAggTest, CanSumKey) {
     int n = 10;
     int input_size = pow(2, 11);
@@ -102,9 +129,10 @@ namespace {
         std::vector < typename TypeParam::Int > vector_tmp_key = rlweSecAgg.ConvertKey(tmp_key);
         ASSERT_OK_AND_ASSIGN(key, key.Add(tmp_key));
         for (int k = 0; k < vector_key.size(); k++) {
-          vector_key[k] = (vector_key[k] + vector_tmp_key[k]) % static_cast < uint64_t > (rlwe::kModulus59);
+          vector_key[k] = (vector_key[k] + vector_tmp_key[k]) % static_cast < absl::uint128 > (rlwe::kModulus80);
         }
       }
+      //print vector_key[0]
       rlwe::SymmetricRlweKey < TypeParam > key_sum = rlweSecAgg.CreateKey(vector_key);
       EXPECT_THAT(key.Key(), key_sum.Key());
     }

@@ -28,7 +28,7 @@ import setuptools
 from setuptools.command import build_ext
 import sys
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 PROJECT_NAME = 'rlwe_sa'
 
@@ -124,7 +124,7 @@ setuptools.setup(
     author='Riccardo Taiello',
     license='MIT',
     ext_modules=[
-        BazelExtension('//rlwe_sa/cc/python:rlwe_sa'),
+        BazelExtension('//rlwe_sa/cc/python:_shell_encryption'),
     ],
     cmdclass=dict(build_ext=BuildBazelExtension),
     packages=setuptools.find_packages(),
