@@ -194,8 +194,8 @@ static std::vector<typename ModularInt::Int> SamplePlaintext(
     rlwe::Uint64 num_coeffs, int log_t) {
     // Seed for the random number generator that is used to create test
     // plaintexts.
-
-    typename ModularInt::Int t = 1 << log_t; 
+    typename ModularInt::Int t = (absl::uint128{1} << log_t); 
+    typename ModularInt::Int value = (absl::uint128{1} << (log_t-5)); 
     unsigned int seed = 1;
     std::mt19937 mt_rand(seed);
     std::vector<typename ModularInt::Int> plaintext(num_coeffs);
@@ -203,7 +203,7 @@ static std::vector<typename ModularInt::Int> SamplePlaintext(
       rlwe::Uint64 rand = mt_rand();
       typename ModularInt::Int int_rand =
           static_cast<typename ModularInt::Int>(rand);
-      plaintext[i] = int_rand % t;
+      plaintext[i] = value; //int_rand % t;
     }
     return plaintext;
   }

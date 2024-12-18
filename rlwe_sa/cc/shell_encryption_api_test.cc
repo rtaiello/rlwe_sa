@@ -52,6 +52,7 @@ namespace {
 
   // Set constants.
   const int kTestingRounds = 1;
+  const int LOG_T = 72;
 
   template < typename ModularInt >
     class RlweSecAggTest: public::testing::Test {};
@@ -65,7 +66,7 @@ namespace {
     };
     std::vector < rlwe_sec_agg_test > test_cases = {
       {
-        static_cast < int > (pow(2, 11)), 11
+        static_cast < int > (pow(2, 11)), LOG_T
       },
       // {static_cast<int>(pow(2,15)), 13},
       // {static_cast<int>(pow(2,15)), 15},
@@ -93,7 +94,7 @@ namespace {
     };
     std::vector < rlwe_sec_agg_test > test_cases = {
       {
-        static_cast < int > (pow(2, 11)), 11
+        static_cast < int > (pow(2, 11)), LOG_T
       },
       // {static_cast<int>(pow(2,15)), 13},
       // {static_cast<int>(pow(2,15)), 15},
@@ -117,7 +118,7 @@ namespace {
   TYPED_TEST(RlweSecAggTest, CanSumKey) {
     int n = 10;
     int input_size = pow(2, 11);
-    int log_t = 11;
+    int log_t = LOG_T;
     for (int i = 0; i < kTestingRounds; i++) {
 
       RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
@@ -129,7 +130,7 @@ namespace {
         std::vector < typename TypeParam::Int > vector_tmp_key = rlweSecAgg.ConvertKey(tmp_key);
         ASSERT_OK_AND_ASSIGN(key, key.Add(tmp_key));
         for (int k = 0; k < vector_key.size(); k++) {
-          vector_key[k] = (vector_key[k] + vector_tmp_key[k]) % static_cast < absl::uint128 > (rlwe::kModulus80);
+          vector_key[k] = (vector_key[k] + vector_tmp_key[k]) % static_cast < typename TypeParam::Int> (rlwe::kModulus80);
         }
       }
       //print vector_key[0]
@@ -140,8 +141,8 @@ namespace {
   TYPED_TEST(RlweSecAggTest, Add) {
     int n = 10;
     int input_size = pow(2, 13);
-    int log_t = 11;
-    int mod_t = (1 << log_t) + 1;
+    int log_t = LOG_T;
+    typename TypeParam::Int mod_t = (absl::uint128{1} << log_t) + 1;  
     for (int i = 0; i < kTestingRounds; i++) {
       RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
       std::vector < typename TypeParam::Int > plaintext_sum = rlweSecAgg.SamplePlaintext(input_size, log_t);
