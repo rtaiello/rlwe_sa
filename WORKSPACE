@@ -32,53 +32,53 @@ http_archive(
 load("@rules_cc//cc:repositories.bzl", "rules_cc_dependencies")
 rules_cc_dependencies()
 
-# rules_proto defines abstract rules for building Protocol Buffers.
-# https://github.com/bazelbuild/rules_proto
-http_archive(
-    name = "rules_proto",
-    sha256 = "602e7161d9195e50246177e7c55b2f39950a9cf7366f74ed5f22fd45750cd208",
-    strip_prefix = "rules_proto-97d8af4dc474595af3900dd85cb3a29ad28cc313",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
-        "https://github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
-    ],
-)
-load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
-rules_proto_dependencies()
-rules_proto_toolchains()
+# # rules_proto defines abstract rules for building Protocol Buffers.
+# # https://github.com/bazelbuild/rules_proto
+# http_archive(
+#     name = "rules_proto",
+#     sha256 = "602e7161d9195e50246177e7c55b2f39950a9cf7366f74ed5f22fd45750cd208",
+#     strip_prefix = "rules_proto-97d8af4dc474595af3900dd85cb3a29ad28cc313",
+#     urls = [
+#         "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
+#         "https://github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
+#     ],
+# )
+# load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
+# rules_proto_dependencies()
+# rules_proto_toolchains()
 
-# Install gtest.
-http_archive(
-  name = "com_github_google_googletest",
-  urls = ["https://github.com/google/googletest/archive/5ab508a01f9eb089207ee87fd547d290da39d015.zip"],
-  strip_prefix = "googletest-5ab508a01f9eb089207ee87fd547d290da39d015",
-)
+# # Install gtest.
+# http_archive(
+#   name = "com_github_google_googletest",
+#   urls = ["https://github.com/google/googletest/archive/5ab508a01f9eb089207ee87fd547d290da39d015.zip"],
+#   strip_prefix = "googletest-5ab508a01f9eb089207ee87fd547d290da39d015",
+# )
 
-# abseil-cpp
-http_archive(
-    name = "com_google_absl",
-    sha256 = "987ce98f02eefbaf930d6e38ab16aa05737234d7afbab2d5c4ea7adbe50c28ed",
-    strip_prefix = "abseil-cpp-20230802.1",
-    urls = [
-         "https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.tar.gz",
-    ],
-)
+# # abseil-cpp
+# http_archive(
+#     name = "com_google_absl",
+#     sha256 = "987ce98f02eefbaf930d6e38ab16aa05737234d7afbab2d5c4ea7adbe50c28ed",
+#     strip_prefix = "abseil-cpp-20230802.1",
+#     urls = [
+#          "https://github.com/abseil/abseil-cpp/archive/refs/tags/20230802.1.tar.gz",
+#     ],
+# )
 
-# BoringSSL
-git_repository(
-    name = "boringssl",
-    commit = "67ffb9606462a1897d3a5edf5c06d329878ba600",  # https://boringssl.googlesource.com/boringssl/+/refs/heads/master-with-bazel
-    remote = "https://boringssl.googlesource.com/boringssl",
-    shallow_since = "1585767053 +0000"
-)
+# # BoringSSL
+# git_repository(
+#     name = "boringssl",
+#     commit = "67ffb9606462a1897d3a5edf5c06d329878ba600",  # https://boringssl.googlesource.com/boringssl/+/refs/heads/master-with-bazel
+#     remote = "https://boringssl.googlesource.com/boringssl",
+#     shallow_since = "1585767053 +0000"
+# )
 
-# Logging
-http_archive(
-    name = "com_github_google_glog",
-    urls = ["https://github.com/google/glog/archive/96a2f23dca4cc7180821ca5f32e526314395d26a.zip"],
-    strip_prefix = "glog-96a2f23dca4cc7180821ca5f32e526314395d26a",
-    sha256 = "6281aa4eeecb9e932d7091f99872e7b26fa6aacece49c15ce5b14af2b7ec050f",
-)
+# # Logging
+# http_archive(
+#     name = "com_github_google_glog",
+#     urls = ["https://github.com/google/glog/archive/96a2f23dca4cc7180821ca5f32e526314395d26a.zip"],
+#     strip_prefix = "glog-96a2f23dca4cc7180821ca5f32e526314395d26a",
+#     sha256 = "6281aa4eeecb9e932d7091f99872e7b26fa6aacece49c15ce5b14af2b7ec050f",
+# )
 
 # gflags, needed for glog
 http_archive(

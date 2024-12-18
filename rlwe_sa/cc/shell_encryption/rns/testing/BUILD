@@ -19,8 +19,8 @@ cc_library(
     testonly = 1,
     hdrs = ["parameters.h"],
     deps = [
-        "//shell_encryption:integral_types",
-        "//shell_encryption:montgomery",
+        "//rlwe_sa/cc/shell_encryption:integral_types",
+        "//rlwe_sa/cc/shell_encryption:montgomery",
         "@com_github_google_googletest//:gtest",
         "@com_google_absl//absl/numeric:int128",
     ],
@@ -31,9 +31,9 @@ cc_library(
     testonly = 1,
     hdrs = ["testing_utils.h"],
     deps = [
-        "//shell_encryption:integral_types",
-        "//shell_encryption/rns:rns_modulus",
-        "//shell_encryption/rns:rns_polynomial",
+        "//rlwe_sa/cc/shell_encryption:integral_types",
+        "//rlwe_sa/cc/shell_encryption/rns:rns_modulus",
+        "//rlwe_sa/cc/shell_encryption/rns:rns_polynomial",
         "@com_google_absl//absl/log:check",
         "@com_google_absl//absl/numeric:int128",
         "@com_google_absl//absl/random",
