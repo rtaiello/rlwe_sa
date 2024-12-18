@@ -21,9 +21,9 @@
 #include "absl/numeric/int128.h"
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
-#include "rlwe_sa/cc/shell_encryption/integral_types.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "shell_encryption/integral_types.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/rns/rns_modulus.h"
 
 namespace rlwe {
 

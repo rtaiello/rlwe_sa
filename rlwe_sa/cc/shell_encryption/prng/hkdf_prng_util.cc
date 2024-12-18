@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rlwe_sa/cc/shell_encryption/prng/hkdf_prng_util.h"
+#include "shell_encryption/prng/hkdf_prng_util.h"
 
 #include <vector>
 
 #include "absl/memory/memory.h"
 #include "absl/strings/str_cat.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/status_macros.h"
 #include "tink/subtle/common_enums.h"
 #include "tink/subtle/hkdf.h"
 #include "tink/subtle/random.h"

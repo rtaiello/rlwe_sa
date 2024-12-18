@@ -17,7 +17,7 @@
 #ifndef RLWE_TESTING_STATUS_TESTING_H_
 #define RLWE_TESTING_STATUS_TESTING_H_
 
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/status_macros.h"
 
 #undef ASSERT_OK
 #define ASSERT_OK(expr) \

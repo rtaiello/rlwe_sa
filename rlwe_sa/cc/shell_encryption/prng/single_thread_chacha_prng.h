@@ -21,9 +21,9 @@
 #define RLWE_SINGLE_THREAD_CHACHA_PRNG_H_
 
 #include "absl/strings/string_view.h"
-#include "rlwe_sa/cc/shell_encryption/prng/chacha_prng_util.h"
-#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "shell_encryption/prng/chacha_prng_util.h"
+#include "shell_encryption/prng/prng.h"
+#include "shell_encryption/statusor.h"
 
 namespace rlwe {
 

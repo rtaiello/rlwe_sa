@@ -34,11 +34,11 @@
 
 #include <vector>
 
-#include "rlwe_sa/cc/shell_encryption/polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
-#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
+#include "shell_encryption/polynomial.h"
+#include "shell_encryption/prng/prng.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/statusor.h"
+#include "shell_encryption/symmetric_encryption.h"
 
 namespace rlwe {
 

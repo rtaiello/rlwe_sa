@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/rns/rns_bgv_ciphertext.h"
+#include "shell_encryption/rns/rns_bgv_ciphertext.h"
 
 #include <cmath>
 #include <memory>
@@ -25,20 +25,20 @@
 #include "absl/log/check.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
-#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
-#include "rlwe_sa/cc/shell_encryption/rns/coefficient_encoder.h"
-#include "rlwe_sa/cc/shell_encryption/rns/finite_field_encoder.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_error_params.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_integer.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_secret_key.h"
-#include "rlwe_sa/cc/shell_encryption/rns/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/rns/testing/testing_utils.h"
-#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "shell_encryption/rns/coefficient_encoder.h"
+#include "shell_encryption/rns/finite_field_encoder.h"
+#include "shell_encryption/rns/rns_context.h"
+#include "shell_encryption/rns/rns_error_params.h"
+#include "shell_encryption/rns/rns_integer.h"
+#include "shell_encryption/rns/rns_modulus.h"
+#include "shell_encryption/rns/rns_polynomial.h"
+#include "shell_encryption/rns/rns_secret_key.h"
+#include "shell_encryption/rns/testing/parameters.h"
+#include "shell_encryption/rns/testing/testing_utils.h"
+#include "shell_encryption/testing/parameters.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
 
 namespace rlwe {
 namespace {
@@ -269,7 +269,7 @@ TYPED_TEST(RnsBgvCiphertextTest, ModReducedCiphertextDecrypts) {
   if (this->main_moduli_.size() < 2) {
     // There is only one prime modulus in the moduli chain, so we cannot perform
     // modulus reduction further.
-    return;
+    GTEST_SKIP() << "Insufficient number of prime moduli for ModReduce.";
   }
 
   ASSERT_OK_AND_ASSIGN(RnsRlweSecretKey<TypeParam> key, this->SampleKey());
@@ -538,6 +538,99 @@ TYPED_TEST(RnsBgvCiphertextPackedTest, HomomorphicMulWithPlaintext) {
   }
 }
 
+TYPED_TEST(RnsBgvCiphertextPackedTest, HomomorphicFusedAbsorbAdd) {
+  using Integer = typename TypeParam::Int;
+  for (auto const& params :
+       testing::GetRnsParametersForFiniteFieldEncoding<TypeParam>()) {
+    this->SetUpBgvRnsParameters(params);
+    int log_n = this->rns_context_->LogN();
+    ASSERT_OK_AND_ASSIGN(RnsRlweSecretKey<TypeParam> key, this->SampleKey());
+
+    Integer t = this->rns_context_->PlaintextModulus();
+    std::vector<Integer> messages0 = testing::SampleMessages(1 << log_n, t);
+    std::vector<Integer> messages1 = testing::SampleMessages(1 << log_n, t);
+    ASSERT_OK_AND_ASSIGN(RnsBgvCiphertext<TypeParam> ciphertext0,
+                         key.template EncryptBgv<FiniteFieldEncoder<TypeParam>>(
+                             messages0, this->encoder_.get(),
+                             this->error_params_.get(), this->prng_.get()));
+    ASSERT_OK_AND_ASSIGN(RnsBgvCiphertext<TypeParam> ciphertext1,
+                         key.template EncryptBgv<FiniteFieldEncoder<TypeParam>>(
+                             messages1, this->encoder_.get(),
+                             this->error_params_.get(), this->prng_.get()));
+
+    std::vector<Integer> projections(1 << log_n, 0);
+    for (int i = 0; i < (1 << log_n); i += 2) {
+      projections[i] = 1;
+    }
+    ASSERT_OK_AND_ASSIGN(
+        RnsPolynomial<TypeParam> plaintext,
+        this->encoder_->EncodeBgv(projections, this->main_moduli_));
+
+    ASSERT_OK(ciphertext0.FusedAbsorbAddInPlace(ciphertext1, plaintext));
+
+    ASSERT_OK_AND_ASSIGN(std::vector<Integer> dec_messages,
+                         key.template DecryptBgv<FiniteFieldEncoder<TypeParam>>(
+                             ciphertext0, this->encoder_.get()));
+    for (int i = 0; i < (1 << log_n); ++i) {
+      Integer expected = (messages0[i] + messages1[i] * projections[i]) % t;
+      EXPECT_EQ(dec_messages[i], expected);
+    }
+  }
+}
+
+TYPED_TEST(RnsBgvCiphertextPackedTest,
+           HomomorphicFusedAbsorbAddWithComputedPad) {
+  using Integer = typename TypeParam::Int;
+  for (auto const& params :
+       testing::GetRnsParametersForFiniteFieldEncoding<TypeParam>()) {
+    this->SetUpBgvRnsParameters(params);
+    int log_n = this->rns_context_->LogN();
+    ASSERT_OK_AND_ASSIGN(RnsRlweSecretKey<TypeParam> key, this->SampleKey());
+
+    Integer t = this->rns_context_->PlaintextModulus();
+    std::vector<Integer> messages0 = testing::SampleMessages(1 << log_n, t);
+    std::vector<Integer> messages1 = testing::SampleMessages(1 << log_n, t);
+    ASSERT_OK_AND_ASSIGN(RnsBgvCiphertext<TypeParam> ciphertext0,
+                         key.template EncryptBgv<FiniteFieldEncoder<TypeParam>>(
+                             messages0, this->encoder_.get(),
+                             this->error_params_.get(), this->prng_.get()));
+    ASSERT_OK_AND_ASSIGN(RnsBgvCiphertext<TypeParam> ciphertext1,
+                         key.template EncryptBgv<FiniteFieldEncoder<TypeParam>>(
+                             messages1, this->encoder_.get(),
+                             this->error_params_.get(), this->prng_.get()));
+
+    std::vector<Integer> projections(1 << log_n, 0);
+    for (int i = 0; i < (1 << log_n); i += 2) {
+      projections[i] = 1;
+    }
+    ASSERT_OK_AND_ASSIGN(
+        RnsPolynomial<TypeParam> plaintext,
+        this->encoder_->EncodeBgv(projections, this->main_moduli_));
+
+    // Precompute the "a" part of the resulting ciphertext.
+    ASSERT_OK_AND_ASSIGN(RnsPolynomial<TypeParam> pad0,
+                         ciphertext0.Component(1));
+    ASSERT_OK_AND_ASSIGN(RnsPolynomial<TypeParam> pad1,
+                         ciphertext1.Component(1));
+    ASSERT_OK(pad0.FusedMulAddInPlace(pad1, plaintext, this->main_moduli_));
+
+    // Fused absorb add without updating the "a" part.
+    ASSERT_OK(
+        ciphertext0.FusedAbsorbAddInPlaceWithoutPad(ciphertext1, plaintext));
+
+    // Now update the "a" part.
+    ASSERT_OK(ciphertext0.SetPadComponent(std::move(pad0)));
+
+    ASSERT_OK_AND_ASSIGN(std::vector<Integer> dec_messages,
+                         key.template DecryptBgv<FiniteFieldEncoder<TypeParam>>(
+                             ciphertext0, this->encoder_.get()));
+    for (int i = 0; i < (1 << log_n); ++i) {
+      Integer expected = (messages0[i] + messages1[i] * projections[i]) % t;
+      EXPECT_EQ(dec_messages[i], expected);
+    }
+  }
+}
+
 TYPED_TEST(RnsBgvCiphertextPackedTest, HomomorphicMulWithCiphertext) {
   using Integer = typename TypeParam::Int;
   for (auto const& params :
@@ -556,7 +649,7 @@ TYPED_TEST(RnsBgvCiphertextPackedTest, HomomorphicMulWithCiphertext) {
       // The test parameters are not suitable for homomorphic multiplication as
       // the error in the product ciphertext is expected to be larger than the
       // ciphertext modulus.
-      return;
+      continue;
     }
 
     ASSERT_OK_AND_ASSIGN(RnsRlweSecretKey<TypeParam> key, this->SampleKey());

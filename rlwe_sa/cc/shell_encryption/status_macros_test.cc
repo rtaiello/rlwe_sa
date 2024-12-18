@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/status_macros.h"
 
 #include <sstream>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/status/status.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "shell_encryption/statusor.h"
 
 namespace rlwe {
 namespace {

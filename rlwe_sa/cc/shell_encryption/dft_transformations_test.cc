@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/dft_transformations.h"
+#include "shell_encryption/dft_transformations.h"
 
 #include <vector>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "rlwe_sa/cc/shell_encryption/context.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
-#include "rlwe_sa/cc/shell_encryption/testing/testing_prng.h"
+#include "shell_encryption/context.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/ntt_parameters.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/testing/parameters.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
+#include "shell_encryption/testing/testing_prng.h"
 
 namespace rlwe {
 namespace {

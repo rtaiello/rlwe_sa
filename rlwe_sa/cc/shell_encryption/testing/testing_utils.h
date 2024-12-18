@@ -23,14 +23,14 @@
 #include <random>
 #include <vector>
 
-#include "rlwe_sa/cc/shell_encryption/constants.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/prng/single_thread_chacha_prng.h"
-#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
-#include "rlwe_sa/cc/shell_encryption/testing/testing_prng.h"
+#include "shell_encryption/constants.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/polynomial.h"
+#include "shell_encryption/prng/single_thread_chacha_prng.h"
+#include "shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/symmetric_encryption.h"
+#include "shell_encryption/testing/testing_prng.h"
 
 namespace rlwe {
 namespace testing {

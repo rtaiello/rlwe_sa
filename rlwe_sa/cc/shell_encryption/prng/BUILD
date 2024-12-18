@@ -24,8 +24,8 @@ cc_library(
     name = "prng",
     hdrs = ["prng.h"],
     deps = [
-        "//rlwe_sa/cc/shell_encryption:integral_types",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:integral_types",
+        "//shell_encryption:statusor_fork",
         "@com_google_absl//absl/strings",
     ],
 )
@@ -54,8 +54,8 @@ cc_test(
     ],
     deps = [
         ":integral_prng_testing_types",
-        "//rlwe_sa/cc/shell_encryption/testing:matchers",
-        "//rlwe_sa/cc/shell_encryption/testing:status_testing",
+        "//shell_encryption/testing:matchers",
+        "//shell_encryption/testing:status_testing",
         "@com_github_google_googletest//:gtest_main",
         "@com_google_absl//absl/strings",
     ],
@@ -72,7 +72,7 @@ cc_library(
     deps = [
         ":hkdf_prng_util",
         ":prng",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:statusor_fork",
         "@com_google_absl//absl/memory",
         "@com_google_absl//absl/strings",
         "@com_google_absl//absl/synchronization",
@@ -88,7 +88,7 @@ cc_library(
     deps = [
         ":hkdf_prng_util",
         ":prng",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:statusor_fork",
         "@com_google_absl//absl/memory",
         "@com_google_absl//absl/strings",
     ],
@@ -101,8 +101,8 @@ cc_library(
     ],
     hdrs = ["hkdf_prng_util.h"],
     deps = [
-        "//rlwe_sa/cc/shell_encryption:integral_types",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:integral_types",
+        "//shell_encryption:statusor_fork",
         "@com_github_tink_crypto_tink_cc//tink/subtle",
         "@com_google_absl//absl/memory",
         "@com_google_absl//absl/status",
@@ -118,8 +118,8 @@ cc_test(
     ],
     deps = [
         ":hkdf_prng",
-        "//rlwe_sa/cc/shell_encryption/testing:matchers",
-        "//rlwe_sa/cc/shell_encryption/testing:status_testing",
+        "//shell_encryption/testing:matchers",
+        "//shell_encryption/testing:status_testing",
         "@com_github_google_googletest//:gtest_main",
         "@com_google_absl//absl/strings",
     ],
@@ -133,8 +133,8 @@ cc_test(
     ],
     deps = [
         ":single_thread_hkdf_prng",
-        "//rlwe_sa/cc/shell_encryption/testing:matchers",
-        "//rlwe_sa/cc/shell_encryption/testing:status_testing",
+        "//shell_encryption/testing:matchers",
+        "//shell_encryption/testing:status_testing",
         "@com_github_google_googletest//:gtest_main",
         "@com_google_absl//absl/strings",
     ],
@@ -151,7 +151,7 @@ cc_library(
     deps = [
         ":chacha_prng_util",
         ":prng",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:statusor_fork",
         "@com_google_absl//absl/base:core_headers",
         "@com_google_absl//absl/memory",
         "@com_google_absl//absl/strings",
@@ -166,7 +166,7 @@ cc_library(
     deps = [
         ":chacha_prng_util",
         ":prng",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:statusor_fork",
         "@com_google_absl//absl/memory",
         "@com_google_absl//absl/strings",
     ],
@@ -179,8 +179,8 @@ cc_library(
     ],
     hdrs = ["chacha_prng_util.h"],
     deps = [
-        "//rlwe_sa/cc/shell_encryption:integral_types",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:integral_types",
+        "//shell_encryption:statusor_fork",
         "@boringssl//:ssl",
         "@com_google_absl//absl/memory",
         "@com_google_absl//absl/status",
@@ -196,8 +196,8 @@ cc_test(
     ],
     deps = [
         ":chacha_prng",
-        "//rlwe_sa/cc/shell_encryption/testing:matchers",
-        "//rlwe_sa/cc/shell_encryption/testing:status_testing",
+        "//shell_encryption/testing:matchers",
+        "//shell_encryption/testing:status_testing",
         "@com_github_google_googletest//:gtest_main",
         "@com_google_absl//absl/strings",
     ],
@@ -211,8 +211,8 @@ cc_test(
     ],
     deps = [
         ":single_thread_chacha_prng",
-        "//rlwe_sa/cc/shell_encryption/testing:matchers",
-        "//rlwe_sa/cc/shell_encryption/testing:status_testing",
+        "//shell_encryption/testing:matchers",
+        "//shell_encryption/testing:status_testing",
         "@com_github_google_googletest//:gtest_main",
         "@com_google_absl//absl/strings",
     ],

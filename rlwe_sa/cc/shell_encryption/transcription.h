@@ -26,7 +26,7 @@
 #include <vector>
 
 #include "absl/strings/str_cat.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "shell_encryption/statusor.h"
 
 namespace rlwe {
 

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/sample_error.h"
+#include "shell_encryption/sample_error.h"
 
 #include <cstdint>
 #include <memory>
@@ -21,13 +21,13 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "rlwe_sa/cc/shell_encryption/context.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
-#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
-#include "rlwe_sa/cc/shell_encryption/testing/testing_prng.h"
+#include "shell_encryption/context.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/symmetric_encryption.h"
+#include "shell_encryption/testing/parameters.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
+#include "shell_encryption/testing/testing_prng.h"
 
 namespace {
 

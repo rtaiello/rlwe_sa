@@ -13,24 +13,24 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/public_key_encryption.h"
+#include "shell_encryption/public_key_encryption.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/status/status.h"
-#include "rlwe_sa/cc/shell_encryption/constants.h"
-#include "rlwe_sa/cc/shell_encryption/context.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
-#include "rlwe_sa/cc/shell_encryption/polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/serialization.pb.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
-#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
-#include "rlwe_sa/cc/shell_encryption/testing/testing_prng.h"
-#include "rlwe_sa/cc/shell_encryption/testing/testing_utils.h"
+#include "shell_encryption/constants.h"
+#include "shell_encryption/context.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/ntt_parameters.h"
+#include "shell_encryption/polynomial.h"
+#include "shell_encryption/serialization.pb.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/symmetric_encryption.h"
+#include "shell_encryption/testing/parameters.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
+#include "shell_encryption/testing/testing_prng.h"
+#include "shell_encryption/testing/testing_utils.h"
 
 namespace {
 

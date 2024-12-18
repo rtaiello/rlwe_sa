@@ -16,21 +16,21 @@
 #ifndef RLWE_ERROR_PARAMS_TEST_H_
 #define RLWE_ERROR_PARAMS_TEST_H_
 
-#include "rlwe_sa/cc/shell_encryption/error_params.h"
+#include "shell_encryption/error_params.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "rlwe_sa/cc/shell_encryption/constants.h"
-#include "rlwe_sa/cc/shell_encryption/context.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
-#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
-#include "rlwe_sa/cc/shell_encryption/testing/testing_prng.h"
-#include "rlwe_sa/cc/shell_encryption/testing/testing_utils.h"
+#include "shell_encryption/constants.h"
+#include "shell_encryption/context.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/ntt_parameters.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/symmetric_encryption.h"
+#include "shell_encryption/testing/parameters.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
+#include "shell_encryption/testing/testing_prng.h"
+#include "shell_encryption/testing/testing_utils.h"
 
 namespace {
 
@@ -58,7 +58,7 @@ class ErrorParamsTest : public testing::Test {
     RLWE_ASSIGN_OR_RETURN(std::string prng_seed,
                           rlwe::SingleThreadHkdfPrng::GenerateSeed());
     RLWE_ASSIGN_OR_RETURN(auto prng,
-                          rlwe::SingleThreadHkdfPrng::Creaate(prng_seed));
+                          rlwe::SingleThreadHkdfPrng::Create(prng_seed));
     return Key::Sample(context->GetLogN(), context->GetVariance(),
                        context->GetLogT(), context->GetModulusParams(),
                        context->GetNttParams(), prng.get());

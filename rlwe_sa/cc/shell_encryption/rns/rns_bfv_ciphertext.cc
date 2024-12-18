@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/rns/rns_bfv_ciphertext.h"
+#include "shell_encryption/rns/rns_bfv_ciphertext.h"
 
 #include <utility>
 #include <vector>
@@ -21,12 +21,12 @@
 #include "absl/numeric/int128.h"
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
-#include "rlwe_sa/cc/shell_encryption/integral_types.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_integer.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/integral_types.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/rns/rns_integer.h"
+#include "shell_encryption/rns/rns_modulus.h"
+#include "shell_encryption/rns/rns_polynomial.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 
@@ -202,6 +202,23 @@ absl::StatusOr<RnsBfvCiphertext<ModularInt>> RnsBfvCiphertext<ModularInt>::Mul(
   return RnsBfvCiphertext<ModularInt>(std::move(tensor), this->moduli(),
                                       this->PowerOfS(), error_product,
                                       this->ErrorParams(), this->context_);
+}
+
+template <typename ModularInt>
+absl::Status RnsBfvCiphertext<ModularInt>::AbsorbInPlaceSimple(
+    const RnsPolynomial<ModularInt>& plaintext) {
+  if (this->Level() + 1 != plaintext.NumModuli()) {
+    return absl::InvalidArgumentError("`plaintext` has a mismatched level.");
+  }
+  if (!plaintext.IsNttForm()) {
+    return absl::InvalidArgumentError("`plaintext` must be in NTT form.");
+  }
+
+  for (auto& ci : this->components()) {
+    RLWE_RETURN_IF_ERROR(ci.MulInPlace(plaintext, this->Moduli()));
+  }
+  this->error() *= this->ErrorParams()->B_plaintext();
+  return absl::OkStatus();
 }
 
 template class RnsBfvCiphertext<MontgomeryInt<Uint16>>;

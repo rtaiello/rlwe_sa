@@ -24,13 +24,13 @@
 #include <vector>
 
 #include "absl/status/status.h"
-#include "rlwe_sa/cc/shell_encryption/error_params.h"
-#include "rlwe_sa/cc/shell_encryption/opt/lazy_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
-#include "rlwe_sa/cc/shell_encryption/sample_error.h"
-#include "rlwe_sa/cc/shell_encryption/serialization.pb.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/error_params.h"
+#include "shell_encryption/opt/lazy_polynomial.h"
+#include "shell_encryption/polynomial.h"
+#include "shell_encryption/prng/prng.h"
+#include "shell_encryption/sample_error.h"
+#include "shell_encryption/serialization.pb.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 
@@ -90,8 +90,6 @@ class SymmetricRlweCiphertext {
         power_of_s_(power_of_s),
         error_(error) {}
 
-  // Method
-
   // Homomorphic addition: add the polynomials representing the ciphertexts
   // component-wise. The example below demonstrates why this procedure works
   // properly in the two-component case. The quantities a, s, m, t, and e are
@@ -128,7 +126,7 @@ class SymmetricRlweCiphertext {
       c_.resize(that.c_.size(), zero);
     }
 
-    for (size_t i = 0; i < that.c_.size(); i++) { // TODO edit here
+    for (size_t i = 0; i < that.c_.size(); i++) {
       RLWE_RETURN_IF_ERROR(c_[i].AddInPlace(that.c_[i], modulus_params_));
     }
 
@@ -136,22 +134,6 @@ class SymmetricRlweCiphertext {
     return absl::OkStatus();
   }
 
-  //Create an Add only on the first component of the ciphertext
-  rlwe::StatusOr<SymmetricRlweCiphertext> AddInPlaceFst(const SymmetricRlweCiphertext& that) {
-    if (power_of_s_ != that.power_of_s_) {
-      return absl::InvalidArgumentError(
-          "Ciphertexts must be encrypted with the same key power.");
-    }
-
-    if (c_.size() < that.c_.size()) {
-      Polynomial<ModularInt> zero(that.c_[0].Len(), modulus_params_);
-      c_.resize(that.c_.size(), zero);
-    }
-
-    RLWE_RETURN_IF_ERROR(c_[0].AddInPlace(that.c_[0], modulus_params_));
-
-    return *this;
-  }
   // Homomorphic subtraction: subtract the polynomials representing the
   // ciphertexts component-wise. The example below demonstrates why this
   // procedure works properly in the two-component case. The quantities a, s, m,
@@ -589,12 +571,6 @@ class SymmetricRlweCiphertext {
   // Accessors.
   unsigned int Len() const { return c_.size(); }
 
-  //Num elements in the ciphertext
-  unsigned int NumCoeffs() const { return c_[0].Len(); }
-
-  // Num of bits in the modulus.
-  unsigned int LogModulus() const { return modulus_params_->log_modulus; }
-
   rlwe::StatusOr<Polynomial<ModularInt>> Component(int index) const {
     if (0 > index || index >= static_cast<int>(c_.size())) {
       return absl::InvalidArgumentError("Index out of range.");
@@ -650,8 +626,6 @@ class SymmetricRlweKey {
   SymmetricRlweKey& operator=(SymmetricRlweKey&&) = default;
   ~SymmetricRlweKey() = default;
 
-  
-
   // Static factory that samples a key from the error distribution. The
   // polynomial representing the key must have a number of coefficients that is
   // a power of two, which is enforced by the first argument.
@@ -666,17 +640,6 @@ class SymmetricRlweKey {
                         1 << log_num_coeffs, variance, prng, modulus_params));
     Polynomial<ModularInt> key = Polynomial<ModularInt>::ConvertToNtt(
         std::move(error), ntt_params, modulus_params);
-    RLWE_ASSIGN_OR_RETURN(auto result,
-                          SymmetricRlweKey::CreateKey(key, variance, log_t,
-                                                      modulus_params, ntt_params));
-    return result;
-      }
-  static rlwe::StatusOr<SymmetricRlweKey> CreateKey(
-      const Polynomial<ModularInt>& key, uint64_t variance, uint64_t log_t,
-      const typename ModularInt::Params* modulus_params,
-      const NttParameters<ModularInt>* ntt_params) {
-
-        
     RLWE_ASSIGN_OR_RETURN(
         auto t_mod, ModularInt::ImportInt((modulus_params->One() << log_t) +
                                               modulus_params->One(),
@@ -905,7 +868,7 @@ class SymmetricRlweKey {
         ntt_params_(ntt_params),
         modulus_params_(modulus_params),
         plaintext_modulus_params_(plaintext_modulus_params) {}
-  
+
   // Make this class a friend of any version of this class, no matter the
   // template.
   template <typename Q>
@@ -1047,26 +1010,6 @@ rlwe::StatusOr<SymmetricRlweCiphertext<ModularInt>> Encrypt(
   // Sample a from the uniform distribution.
   RLWE_ASSIGN_OR_RETURN(auto a, SamplePolynomialFromPrng<ModularInt>(
                                     key.Len(), prng, key.ModulusParams()));
-  
-
-  // Create c0.
-  RLWE_ASSIGN_OR_RETURN(Polynomial<ModularInt> c0,
-                        internal::Encrypt(key, plaintext, a, prng));
-
-  // Compute c1 = -a and return the ciphertext.
-  return SymmetricRlweCiphertext<ModularInt>(
-      std::vector<Polynomial<ModularInt>>{
-          std::move(c0), std::move(a.NegateInPlace(key.ModulusParams()))},
-      1, error_params->B_encryption(), key.ModulusParams(), error_params);
-}
-
-template <typename ModularInt>
-rlwe::StatusOr<SymmetricRlweCiphertext<ModularInt>> Encrypt(
-    const SymmetricRlweKey<ModularInt>& key,
-    const Polynomial<ModularInt>& plaintext,
-    Polynomial<ModularInt> a,
-    const ErrorParams<ModularInt>* error_params, SecurePrng* prng) {
-
 
   // Create c0.
   RLWE_ASSIGN_OR_RETURN(Polynomial<ModularInt> c0,

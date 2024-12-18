@@ -25,9 +25,9 @@
 
 #include <cmath>
 
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/ntt_parameters.h"
+#include "shell_encryption/statusor.h"
 
 namespace rlwe {
 

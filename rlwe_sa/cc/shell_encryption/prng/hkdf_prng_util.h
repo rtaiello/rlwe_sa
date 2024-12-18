@@ -34,8 +34,8 @@
 
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
-#include "rlwe_sa/cc/shell_encryption/integral_types.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "shell_encryption/integral_types.h"
+#include "shell_encryption/statusor.h"
 
 namespace rlwe::internal {
 

@@ -17,7 +17,7 @@
 #define RLWE_INT256_H_
 
 #include "absl/numeric/int128.h"
-#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "shell_encryption/integral_types.h"
 
 namespace rlwe {
 
@@ -160,8 +160,8 @@ struct uint256_pod {
 
 #ifdef ABSL_HAVE_INTRINSIC_INT128
 const uint256_pod kuint256max = {
-    static_cast<unsigned __int128>(absl::kuint128max),
-    static_cast<unsigned __int128>(absl::kuint128max)};
+    static_cast<unsigned __int128>(absl::Uint128Max()),
+    static_cast<unsigned __int128>(absl::Uint128Max())};
 #else
 const uint256_pod kuint256max = {absl::Uint128Max(), absl::Uint128Max()};
 #endif

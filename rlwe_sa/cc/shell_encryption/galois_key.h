@@ -20,9 +20,9 @@
 #include <vector>
 
 #include "absl/strings/str_cat.h"
-#include "rlwe_sa/cc/shell_encryption/relinearization_key.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "shell_encryption/relinearization_key.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/statusor.h"
 
 namespace rlwe {
 

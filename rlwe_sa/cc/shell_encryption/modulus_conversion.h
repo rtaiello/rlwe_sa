@@ -17,10 +17,10 @@
 #define RLWE_MODULUS_CONVERSION_H_
 
 #include "absl/types/span.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
-#include "rlwe_sa/cc/shell_encryption/polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/ntt_parameters.h"
+#include "shell_encryption/polynomial.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 

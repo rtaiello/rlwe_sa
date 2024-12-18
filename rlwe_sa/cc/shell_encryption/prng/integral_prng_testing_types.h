@@ -19,10 +19,10 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "rlwe_sa/cc/shell_encryption/prng/chacha_prng.h"
-#include "rlwe_sa/cc/shell_encryption/prng/hkdf_prng.h"
-#include "rlwe_sa/cc/shell_encryption/prng/single_thread_chacha_prng.h"
-#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "shell_encryption/prng/chacha_prng.h"
+#include "shell_encryption/prng/hkdf_prng.h"
+#include "shell_encryption/prng/single_thread_chacha_prng.h"
+#include "shell_encryption/prng/single_thread_hkdf_prng.h"
 
 namespace rlwe {
 

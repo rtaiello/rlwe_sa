@@ -22,10 +22,12 @@
 
 #include "absl/strings/str_cat.h"
 #include "absl/types/span.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_error_params.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/rns/lazy_rns_polynomial.h"
+#include "shell_encryption/rns/rns_error_params.h"
+#include "shell_encryption/rns/rns_polynomial.h"
+#include "shell_encryption/rns/serialization.pb.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 
@@ -61,7 +63,38 @@ class RnsRlweCiphertext {
   static RnsRlweCiphertext CreateZero(
       std::vector<const PrimeModulus<ModularInt>*> moduli,
       const RnsErrorParams<ModularInt>* error_params) {
-    return RnsRlweCiphertext({}, moduli, /*power_of_s=*/1, 0, error_params);
+    return RnsRlweCiphertext({}, std::move(moduli), /*power_of_s=*/1, 0,
+                             error_params);
+  }
+
+  static absl::StatusOr<RnsRlweCiphertext> Deserialize(
+      const SerializedRnsRlweCiphertext& serialized,
+      std::vector<const PrimeModulus<ModularInt>*> moduli,
+      const RnsErrorParams<ModularInt>* error_params) {
+    if (error_params == nullptr) {
+      return absl::InvalidArgumentError("`error_params` must not be null.");
+    }
+    std::vector<RnsPolynomial<ModularInt>> components;
+    components.reserve(serialized.components_size());
+    for (int i = 0; i < serialized.components_size(); ++i) {
+      RLWE_ASSIGN_OR_RETURN(RnsPolynomial<ModularInt> c,
+                            RnsPolynomial<ModularInt>::Deserialize(
+                                serialized.components(i), moduli));
+      components.push_back(std::move(c));
+    }
+    return RnsRlweCiphertext(std::move(components), std::move(moduli),
+                             serialized.power_of_s(), serialized.error(),
+                             error_params);
+  }
+
+  absl::StatusOr<SerializedRnsRlweCiphertext> Serialize() const {
+    SerializedRnsRlweCiphertext serialized;
+    for (auto const& c : components_) {
+      RLWE_ASSIGN_OR_RETURN(*serialized.add_components(), c.Serialize(moduli_));
+    }
+    serialized.set_power_of_s(power_of_s_);
+    serialized.set_error(error_);
+    return serialized;
   }
 
   // Homomorphically negate the underlying plaintext in place.
@@ -200,28 +233,146 @@ class RnsRlweCiphertext {
     return absl::OkStatus();
   }
 
-  // Returns the ciphertext of the fused operation this + `a` * `b`.
-  absl::Status FusedAbsorbAddInPlace(const RnsRlweCiphertext& a,
-                                     const RnsPolynomial<ModularInt>& b) {
-    if (Degree() != a.Degree()) {
-      return absl::InvalidArgumentError("`a` has a mismatched degree.");
+  // Returns the ciphertext of the fused operation this + `ctxt` * `ptxt`.
+  absl::Status FusedAbsorbAddInPlace(const RnsRlweCiphertext& ctxt,
+                                     const RnsPolynomial<ModularInt>& ptxt) {
+    if (Degree() != ctxt.Degree()) {
+      return absl::InvalidArgumentError("`ctxt` has a mismatched degree.");
     }
-    if (Level() != a.Level()) {
-      return absl::InvalidArgumentError("`a` has a mismatched level.");
+    if (Level() != ctxt.Level()) {
+      return absl::InvalidArgumentError("`ctxt` has a mismatched level.");
     }
-    if (PowerOfS() != a.PowerOfS()) {
-      return absl::InvalidArgumentError(
-          "Ciphertexts must be encrypted with the same key power.");
+    if (PowerOfS() != ctxt.PowerOfS()) {
+      return absl::InvalidArgumentError("`ctxt` has a mismatched key power.");
     }
 
-    // Compute components_[i] += a.components_[i] * b.
+    // Compute components_[i] += ctxt.components_[i] * ptxt.
     for (int i = 0; i < components_.size(); i++) {
-      RLWE_RETURN_IF_ERROR(
-          components_[i].FusedMulAddInPlace(a.components_[i], b, moduli_));
+      RLWE_RETURN_IF_ERROR(components_[i].FusedMulAddInPlace(
+          ctxt.components_[i], ptxt, moduli_));
     }
 
     // Update the error
-    error_ += a.error_ * error_params_->B_plaintext();
+    error_ += ctxt.error_ * error_params_->B_plaintext();
+    return absl::OkStatus();
+  }
+
+  // Returns the ciphertext of the fused operation this + `ctxt` * `ptxt`, where
+  // this and `ctxt` are both degree 1 ciphertexts, without updating the "a"
+  // part in the resulting ciphertext.
+  // Note that a degree-1 RLWE ciphertext is a pair (b, a) such that b + a * s
+  // decrypts to a noisy plaintext. In some cases, the "a" part is known in
+  // advance before the ciphertext is generated from fresh encryption or
+  // homomorphic operations, and hence we can skip it during intermediate
+  // homomorphic computation and only set it to the final value at the end using
+  // `SetPadComponent()`.
+  absl::Status FusedAbsorbAddInPlaceWithoutPad(
+      const RnsRlweCiphertext& ctxt, const RnsPolynomial<ModularInt>& ptxt) {
+    if (Degree() != 1 || Degree() != ctxt.Degree()) {
+      return absl::InvalidArgumentError(
+          "`FusedAbsorbAddInPlaceWithoutPad only applies to degree 1 "
+          "ciphertext.");
+    }
+    if (Level() != ctxt.Level()) {
+      return absl::InvalidArgumentError("`ctxt` has a mismatched level.");
+    }
+    if (PowerOfS() != ctxt.PowerOfS()) {
+      return absl::InvalidArgumentError("`ctxt` has a mismatched key power.");
+    }
+
+    // Compute the non-"a" part.
+    RLWE_RETURN_IF_ERROR(
+        components_[0].FusedMulAddInPlace(ctxt.components_[0], ptxt, moduli_));
+
+    // Update the error.
+    error_ += ctxt.error_ * error_params_->B_plaintext();
+    return absl::OkStatus();
+  }
+
+  // Returns the ciphertext of the fused operation this + `ctxt` * `ptxt`, where
+  // this and `ctxt` are both degree 1 ciphertexts, without updating the "a"
+  // part in the resulting ciphertext. In this version, the resulting ciphertext
+  // components are stored as lazy polynomials to speed up successive fused
+  // operations. To use the ciphertext object for other operations, one needs to
+  // call `MergeLazyOperations` after done with lazy operations.
+  absl::Status FusedAbsorbAddInPlaceWithoutPadLazily(
+      const RnsRlweCiphertext& ctxt, const RnsPolynomial<ModularInt>& ptxt) {
+    if (ctxt.Degree() != 1) {
+      return absl::InvalidArgumentError(
+          "`FusedAbsorbAddInPlaceWithoutPad only applies to degree 1 "
+          "ciphertext.");
+    }
+    if (Level() != ctxt.Level()) {
+      return absl::InvalidArgumentError("`ctxt` has a mismatched level.");
+    }
+    if (PowerOfS() != ctxt.PowerOfS()) {
+      return absl::InvalidArgumentError("`ctxt` has a mismatched key power.");
+    }
+
+    // If lazy_components_ is empty, this is the first time we call this
+    // function. We therefore create the vector of lazy polynomials using the
+    // input ctxt.component[0] and ptxt.
+    if (lazy_components_.empty()) {
+      lazy_components_.reserve(1);
+      // Compute the non-"a" part.
+      RLWE_ASSIGN_OR_RETURN(auto lazy, LazyRnsPolynomial<ModularInt>::Create(
+                                           ctxt.components_[0], ptxt, moduli_));
+      lazy_components_.push_back(std::move(lazy));
+      return absl::OkStatus();
+    }
+
+    // Compute the non-"a" part.
+    RLWE_RETURN_IF_ERROR(lazy_components_[0].FusedMulAddInPlace(
+        ctxt.components_[0], ptxt, moduli_));
+
+    // Update the error.
+    error_ += ctxt.error_ * error_params_->B_plaintext();
+    return absl::OkStatus();
+  }
+
+  // Updates this ciphertext's components after completing lazy operations.
+  absl::Status MergeLazyOperations() {
+    if (lazy_components_.empty()) {
+      // It is not really required to throw an error because the content of c_
+      // is not modified, but raising this branch means the underlying code is
+      // not using lazy operations, so there is really no reason to call this
+      // function. We throw an error to force the developer to check their code.
+      return absl::FailedPreconditionError(
+          "The ciphertext was not in lazy mode.");
+    }
+    components_.reserve(lazy_components_.size());
+    // If some of components_ already exist, add the content of lazy_components_
+    // to them.
+    for (int i = 0; i < lazy_components_.size() && i < components_.size();
+         i++) {
+      RLWE_ASSIGN_OR_RETURN(RnsPolynomial<ModularInt> ci,
+                            lazy_components_[i].Export(moduli_));
+      RLWE_RETURN_IF_ERROR(components_[i].AddInPlace(ci, moduli_));
+    }
+
+    // If lazy_components_ is larger than c_, add to c_ the new polynomials.
+    for (int i = components_.size(); i < lazy_components_.size(); i++) {
+      RLWE_ASSIGN_OR_RETURN(RnsPolynomial<ModularInt> ci,
+                            lazy_components_[i].Export(moduli_));
+      components_.push_back(std::move(ci));
+    }
+    lazy_components_.clear();
+    return absl::OkStatus();
+  }
+
+  // Sets the "a" part of the ciphertext using the given polynomial. Returns
+  // an error if the ciphertext is not of degree 1.
+  absl::Status SetPadComponent(RnsPolynomial<ModularInt> new_a) {
+    if (Degree() > 1) {
+      return absl::InvalidArgumentError(
+          "`SetPadComponent` only applies to degree 1 ciphertext.");
+    }
+    // We may have a degree-0 ciphertext due to lazy FMA without "a" component.
+    if (Degree() == 1) {
+      components_[1] = std::move(new_a);
+    } else {
+      components_.push_back(std::move(new_a));
+    }
     return absl::OkStatus();
   }
 
@@ -341,8 +492,12 @@ class RnsRlweCiphertext {
   double& error() { return error_; }
 
  private:
-  // The ciphertext polynomials
+  // The ciphertext components [c_0, c_1, ...].
   std::vector<RnsPolynomial<ModularInt>> components_;
+
+  // The ciphertext components stored as lazy polynomials. This is used only
+  // when computing FusedAbsorbAdd* operations with plaintext polynomials.
+  std::vector<LazyRnsPolynomial<ModularInt>> lazy_components_;
 
   // The prime moduli constituting the modulus of this ciphertext.
   std::vector<const PrimeModulus<ModularInt>*> moduli_;

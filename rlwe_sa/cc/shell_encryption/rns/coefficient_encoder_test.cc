@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/rns/coefficient_encoder.h"
+#include "shell_encryption/rns/coefficient_encoder.h"
 
 #include <memory>
 #include <vector>
@@ -23,14 +23,14 @@
 #include "absl/log/check.h"
 #include "absl/status/status.h"
 #include "absl/types/span.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/rns/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/rns/testing/testing_utils.h"
-#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "shell_encryption/rns/rns_context.h"
+#include "shell_encryption/rns/rns_modulus.h"
+#include "shell_encryption/rns/rns_polynomial.h"
+#include "shell_encryption/rns/testing/parameters.h"
+#include "shell_encryption/rns/testing/testing_utils.h"
+#include "shell_encryption/testing/parameters.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
 
 namespace rlwe {
 

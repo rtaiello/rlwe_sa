@@ -16,13 +16,13 @@
 // This file includes specific unit tests files to test populating the buffer
 // every internal::kHkdfMaxOutputBytes bytes.
 
-#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "shell_encryption/prng/single_thread_hkdf_prng.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/strings/str_cat.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
 
 namespace rlwe {
 

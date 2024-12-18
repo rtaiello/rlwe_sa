@@ -23,13 +23,13 @@
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "absl/types/span.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_ciphertext.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_error_params.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_integer.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/rns/rns_ciphertext.h"
+#include "shell_encryption/rns/rns_context.h"
+#include "shell_encryption/rns/rns_error_params.h"
+#include "shell_encryption/rns/rns_integer.h"
+#include "shell_encryption/rns/rns_modulus.h"
+#include "shell_encryption/rns/rns_polynomial.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 
@@ -150,6 +150,18 @@ class RnsBfvCiphertext : public RnsRlweCiphertext<ModularInt> {
   // `plaintext` is a polynomial that encodes the plaintext messages, i.e.
   // the messages are round(t / Q * `plaintext`) (mod t).
   absl::Status AbsorbInPlace(const RnsPolynomial<ModularInt>& plaintext);
+
+  // Homomorphically multiply `plaintext` to this ciphertext, assuming
+  // `plaintext` is a polynomial that encodes the plaintext messages without
+  // scaling, i.e. the messages are `plaintext` (mod t).
+  absl::Status AbsorbInPlaceSimple(const RnsPolynomial<ModularInt>& plaintext);
+
+  absl::StatusOr<RnsBfvCiphertext> AbsorbSimple(
+      const RnsPolynomial<ModularInt>& plaintext) const {
+    RnsBfvCiphertext out = *this;
+    RLWE_RETURN_IF_ERROR(out.AbsorbInPlaceSimple(plaintext));
+    return out;
+  }
 
   // Performs modulus reduction on BFV ciphertext. If `t` is the plaintext
   // modulus, and q_L is the last prime modulus in the moduli chain, then the

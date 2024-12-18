@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
+#include "shell_encryption/rns/rns_context.h"
 
 #include "absl/memory/memory.h"
 

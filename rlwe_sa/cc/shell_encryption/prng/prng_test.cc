@@ -22,9 +22,9 @@
 #include <gtest/gtest.h>
 #include <gtest/gtest-typed-test.h>
 #include "absl/strings/str_cat.h"
-#include "rlwe_sa/cc/shell_encryption/prng/integral_prng_testing_types.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "shell_encryption/prng/integral_prng_testing_types.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
 
 namespace rlwe {
 

@@ -28,10 +28,10 @@ cc_library(
     testonly = 1,
     hdrs = ["parameters.h"],
     deps = [
-        "//rlwe_sa/cc/shell_encryption:constants",
-        "//rlwe_sa/cc/shell_encryption:context",
-        "//rlwe_sa/cc/shell_encryption:integral_types",
-        "//rlwe_sa/cc/shell_encryption:montgomery",
+        "//shell_encryption:constants",
+        "//shell_encryption:context",
+        "//shell_encryption:integral_types",
+        "//shell_encryption:montgomery",
         "@com_github_google_googletest//:gtest",
         "@com_google_absl//absl/numeric:int128",
     ],
@@ -42,8 +42,8 @@ cc_library(
     testonly = 1,
     hdrs = ["testing_prng.h"],
     deps = [
-        "//rlwe_sa/cc/shell_encryption:integral_types",
-        "//rlwe_sa/cc/shell_encryption/prng",
+        "//shell_encryption:integral_types",
+        "//shell_encryption/prng",
     ],
 )
 
@@ -51,7 +51,7 @@ cc_library(
     name = "status_testing",
     testonly = 1,
     hdrs = ["status_testing.h"],
-    deps = ["//rlwe_sa/cc/shell_encryption:statusor_fork"],
+    deps = ["//shell_encryption:statusor_fork"],
 )
 
 cc_library(
@@ -60,13 +60,13 @@ cc_library(
     hdrs = ["testing_utils.h"],
     deps = [
         ":testing_prng",
-        "//rlwe_sa/cc/shell_encryption:constants",
-        "//rlwe_sa/cc/shell_encryption:montgomery",
-        "//rlwe_sa/cc/shell_encryption:polynomial",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
-        "//rlwe_sa/cc/shell_encryption:symmetric_encryption",
-        "//rlwe_sa/cc/shell_encryption/prng:single_thread_chacha_prng",
-        "//rlwe_sa/cc/shell_encryption/prng:single_thread_hkdf_prng",
+        "//shell_encryption:constants",
+        "//shell_encryption:montgomery",
+        "//shell_encryption:polynomial",
+        "//shell_encryption:statusor_fork",
+        "//shell_encryption:symmetric_encryption",
+        "//shell_encryption/prng:single_thread_chacha_prng",
+        "//shell_encryption/prng:single_thread_hkdf_prng",
     ],
 )
 
@@ -78,9 +78,10 @@ cc_library(
         "status_matchers.h",
     ],
     deps = [
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:statusor_fork",
         "@com_github_google_googletest//:gtest",
         "@com_google_absl//absl/status",
+        "@com_google_protobuf//:differencer",
     ],
 )
 
@@ -92,9 +93,10 @@ cc_library(
         "status_matchers.h",
     ],
     deps = [
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:statusor_fork",
         "@com_github_google_googletest//:gtest",
         "@com_google_absl//absl/status",
+        "@com_google_protobuf//:differencer",
     ],
 )
 
@@ -117,7 +119,7 @@ cc_library(
     hdrs = ["coefficient_polynomial.h"],
     deps = [
         ":coefficient_polynomial_cc_proto",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
+        "//shell_encryption:statusor_fork",
         "@com_github_google_glog//:glog",
         "@com_google_absl//absl/strings",
     ],
@@ -133,8 +135,8 @@ cc_test(
         ":status_is_fork",
         ":status_testing",
         ":testing_prng",
-        "//rlwe_sa/cc/shell_encryption:constants",
-        "//rlwe_sa/cc/shell_encryption:montgomery",
+        "//shell_encryption:constants",
+        "//shell_encryption:montgomery",
         "@com_github_google_googletest//:gtest_main",
     ],
 )
@@ -145,10 +147,10 @@ cc_library(
     hdrs = ["coefficient_polynomial_ciphertext.h"],
     deps = [
         ":coefficient_polynomial",
-        "//rlwe_sa/cc/shell_encryption:error_params",
-        "//rlwe_sa/cc/shell_encryption:polynomial",
-        "//rlwe_sa/cc/shell_encryption:statusor_fork",
-        "//rlwe_sa/cc/shell_encryption:symmetric_encryption",
+        "//shell_encryption:error_params",
+        "//shell_encryption:polynomial",
+        "//shell_encryption:statusor_fork",
+        "//shell_encryption:symmetric_encryption",
     ],
 )
 
@@ -164,11 +166,11 @@ cc_test(
         ":status_testing",
         ":testing_prng",
         ":testing_utils",
-        "//rlwe_sa/cc/shell_encryption:constants",
-        "//rlwe_sa/cc/shell_encryption:montgomery",
-        "//rlwe_sa/cc/shell_encryption:ntt_parameters",
-        "//rlwe_sa/cc/shell_encryption:polynomial",
-        "//rlwe_sa/cc/shell_encryption:symmetric_encryption",
+        "//shell_encryption:constants",
+        "//shell_encryption:montgomery",
+        "//shell_encryption:ntt_parameters",
+        "//shell_encryption:polynomial",
+        "//shell_encryption:symmetric_encryption",
         "@com_github_google_googletest//:gtest_main",
     ],
 )

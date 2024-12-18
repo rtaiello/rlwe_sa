@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/rns/rns_bgv_ciphertext.h"
+#include "shell_encryption/rns/rns_bgv_ciphertext.h"
 
 #include "absl/numeric/int128.h"
-#include "rlwe_sa/cc/shell_encryption/integral_types.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "shell_encryption/integral_types.h"
+#include "shell_encryption/montgomery.h"
 
 namespace rlwe {
 

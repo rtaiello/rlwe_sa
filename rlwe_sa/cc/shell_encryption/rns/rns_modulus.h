@@ -16,8 +16,8 @@
 #ifndef RLWE_RNS_RNS_MODULUS_H_
 #define RLWE_RNS_RNS_MODULUS_H_
 
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/ntt_parameters.h"
 
 namespace rlwe {
 

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
+#include "shell_encryption/ntt_parameters.h"
 
 #include <cstdint>
 #include <vector>
@@ -21,12 +21,12 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/numeric/int128.h"
-#include "rlwe_sa/cc/shell_encryption/constants.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "shell_encryption/constants.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/testing/parameters.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
 
 namespace {
 

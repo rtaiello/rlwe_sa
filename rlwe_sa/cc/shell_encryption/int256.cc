@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/int256.h"
+#include "shell_encryption/int256.h"
 
 #include <iomanip>
 #include <iostream>

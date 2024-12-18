@@ -23,10 +23,10 @@
 #include "absl/algorithm/container.h"
 #include "absl/status/status.h"
 #include "absl/types/span.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_integer.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/rns/rns_integer.h"
+#include "shell_encryption/rns/rns_modulus.h"
+#include "shell_encryption/rns/rns_polynomial.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 

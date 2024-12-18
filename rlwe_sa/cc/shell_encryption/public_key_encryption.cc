@@ -13,20 +13,20 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/public_key_encryption.h"
+#include "shell_encryption/public_key_encryption.h"
 
 #include <memory>
 
 #include "absl/numeric/int128.h"
 #include "absl/status/status.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
-#include "rlwe_sa/cc/shell_encryption/prng/single_thread_chacha_prng.h"
-#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
-#include "rlwe_sa/cc/shell_encryption/sample_error.h"
-#include "rlwe_sa/cc/shell_encryption/serialization.pb.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/prng/prng.h"
+#include "shell_encryption/prng/single_thread_chacha_prng.h"
+#include "shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "shell_encryption/sample_error.h"
+#include "shell_encryption/serialization.pb.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/statusor.h"
 
 namespace rlwe {
 

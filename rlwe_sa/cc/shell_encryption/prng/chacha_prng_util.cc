@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rlwe_sa/cc/shell_encryption/prng/chacha_prng_util.h"
+#include "shell_encryption/prng/chacha_prng_util.h"
 
 #include <cstdint>
 #include <vector>
@@ -22,7 +22,7 @@
 #include <openssl/chacha.h>
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 namespace internal {

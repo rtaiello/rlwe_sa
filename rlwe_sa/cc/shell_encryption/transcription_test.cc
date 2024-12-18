@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rlwe_sa/cc/shell_encryption/transcription.h"
+#include "shell_encryption/transcription.h"
 
 #include <cstdint>
 #include <random>
@@ -21,10 +21,10 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/numeric/int128.h"
-#include "rlwe_sa/cc/shell_encryption/integral_types.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "shell_encryption/integral_types.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/testing/status_matchers.h"
+#include "shell_encryption/testing/status_testing.h"
 
 namespace rlwe {
 namespace {

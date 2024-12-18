@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rlwe_sa/cc/shell_encryption/testing/protobuf_matchers.h"
+#include "shell_encryption/testing/protobuf_matchers.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "rlwe_sa/cc/shell_encryption/testing/coefficient_polynomial.pb.h"
-#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "shell_encryption/testing/coefficient_polynomial.pb.h"
+#include "shell_encryption/testing/status_testing.h"
 
 namespace {
 

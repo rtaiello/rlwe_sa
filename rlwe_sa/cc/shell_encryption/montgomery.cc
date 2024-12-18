@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "shell_encryption/montgomery.h"
 
 #include "absl/status/statusor.h"
-#include "rlwe_sa/cc/shell_encryption/transcription.h"
+#include "shell_encryption/transcription.h"
 
 namespace rlwe {
 

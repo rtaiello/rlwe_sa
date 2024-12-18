@@ -20,12 +20,12 @@
 #include <vector>
 
 #include "absl/strings/str_cat.h"
-#include "rlwe_sa/cc/shell_encryption/bits_util.h"
-#include "rlwe_sa/cc/shell_encryption/constants.h"
-#include "rlwe_sa/cc/shell_encryption/error_params.h"
-#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
-#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "shell_encryption/bits_util.h"
+#include "shell_encryption/constants.h"
+#include "shell_encryption/error_params.h"
+#include "shell_encryption/prng/prng.h"
+#include "shell_encryption/status_macros.h"
+#include "shell_encryption/statusor.h"
 
 namespace rlwe {
 
@@ -65,7 +65,7 @@ static rlwe::StatusOr<std::vector<ModularInt>> SampleFromErrorDistribution(
       if (k >= 64) {
         // Use 64 bits of randomness
         RLWE_ASSIGN_OR_RETURN(auto r64, prng->Rand64());
-        coefficient += r64;
+        coefficient += rlwe::internal::CountOnes64(r64);
         RLWE_ASSIGN_OR_RETURN(r64, prng->Rand64());
         coefficient -= rlwe::internal::CountOnes64(r64);
         k -= 64;

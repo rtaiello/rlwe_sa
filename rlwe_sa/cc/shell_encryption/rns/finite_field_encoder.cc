@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "rlwe_sa/cc/shell_encryption/rns/finite_field_encoder.h"
+#include "shell_encryption/rns/finite_field_encoder.h"
 
 #include <memory>
 #include <utility>
@@ -24,14 +24,14 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/str_cat.h"
 #include "absl/types/span.h"
-#include "rlwe_sa/cc/shell_encryption/dft_transformations.h"
-#include "rlwe_sa/cc/shell_encryption/integral_types.h"
-#include "rlwe_sa/cc/shell_encryption/montgomery.h"
-#include "rlwe_sa/cc/shell_encryption/rns/coefficient_encoder.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/dft_transformations.h"
+#include "shell_encryption/integral_types.h"
+#include "shell_encryption/montgomery.h"
+#include "shell_encryption/rns/coefficient_encoder.h"
+#include "shell_encryption/rns/rns_context.h"
+#include "shell_encryption/rns/rns_modulus.h"
+#include "shell_encryption/rns/rns_polynomial.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 

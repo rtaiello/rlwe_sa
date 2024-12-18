@@ -23,14 +23,14 @@
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "absl/types/span.h"
-#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
-#include "rlwe_sa/cc/shell_encryption/rns/coefficient_encoder.h"
-#include "rlwe_sa/cc/shell_encryption/rns/crt_interpolation.h"
-#include "rlwe_sa/cc/shell_encryption/rns/error_correction.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
-#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
-#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "shell_encryption/ntt_parameters.h"
+#include "shell_encryption/rns/coefficient_encoder.h"
+#include "shell_encryption/rns/crt_interpolation.h"
+#include "shell_encryption/rns/error_correction.h"
+#include "shell_encryption/rns/rns_context.h"
+#include "shell_encryption/rns/rns_modulus.h"
+#include "shell_encryption/rns/rns_polynomial.h"
+#include "shell_encryption/status_macros.h"
 
 namespace rlwe {
 
