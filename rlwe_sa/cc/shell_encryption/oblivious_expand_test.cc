@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "shell_encryption/oblivious_expand.h"
+#include "rlwe_sa/cc/shell_encryption/oblivious_expand.h"
 
 #include <cmath>
 #include <cstdint>
@@ -26,14 +26,14 @@
 #include <gtest/gtest.h>
 #include "absl/memory/memory.h"
 #include "absl/status/status.h"
-#include "shell_encryption/constants.h"
-#include "shell_encryption/galois_key.h"
-#include "shell_encryption/montgomery.h"
-#include "shell_encryption/ntt_parameters.h"
-#include "shell_encryption/symmetric_encryption.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
-#include "shell_encryption/testing/testing_utils.h"
+#include "rlwe_sa/cc/shell_encryption/constants.h"
+#include "rlwe_sa/cc/shell_encryption/galois_key.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
+#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/testing/testing_utils.h"
 
 namespace rlwe {
 namespace {

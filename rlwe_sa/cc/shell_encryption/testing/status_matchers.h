@@ -24,7 +24,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/status/status.h"
-#include "shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
 
 namespace rlwe {
 namespace testing {

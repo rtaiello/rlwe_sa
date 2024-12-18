@@ -23,9 +23,9 @@
 #include "absl/base/thread_annotations.h"
 #include "absl/strings/string_view.h"
 #include "absl/synchronization/mutex.h"
-#include "shell_encryption/prng/chacha_prng_util.h"
-#include "shell_encryption/prng/prng.h"
-#include "shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/prng/chacha_prng_util.h"
+#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
 
 namespace rlwe {
 

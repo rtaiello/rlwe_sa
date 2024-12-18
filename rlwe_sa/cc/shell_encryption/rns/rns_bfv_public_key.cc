@@ -13,11 +13,11 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/rns/rns_bfv_public_key.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_bfv_public_key.h"
 
 #include "absl/numeric/int128.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
 
 namespace rlwe {
 

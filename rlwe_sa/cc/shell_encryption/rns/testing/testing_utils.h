@@ -25,9 +25,9 @@
 #include "absl/numeric/int128.h"
 #include "absl/random/random.h"
 #include "absl/types/span.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/rns/rns_modulus.h"
-#include "shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
 
 namespace rlwe {
 namespace testing {

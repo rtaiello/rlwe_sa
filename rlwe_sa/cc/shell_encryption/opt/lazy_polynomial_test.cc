@@ -13,21 +13,21 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/opt/lazy_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/opt/lazy_polynomial.h"
 
 #include <vector>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/status/status.h"
-#include "shell_encryption/context.h"
-#include "shell_encryption/montgomery.h"
-#include "shell_encryption/polynomial.h"  // Needs to be included since Polynomial is forward declarated.
-#include "shell_encryption/prng/single_thread_hkdf_prng.h"
-#include "shell_encryption/statusor.h"
-#include "shell_encryption/testing/parameters.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/context.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/polynomial.h"  // Needs to be included since Polynomial is forward declarated.
+#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
 
 namespace {
 

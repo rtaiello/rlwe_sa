@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
 
 #include <vector>
 
 #include "absl/memory/memory.h"
 #include "absl/strings/str_cat.h"
-#include "shell_encryption/prng/hkdf_prng_util.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/prng/hkdf_prng_util.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 namespace rlwe {
 

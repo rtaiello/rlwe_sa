@@ -20,8 +20,8 @@
 #include <vector>
 
 #include "absl/status/status.h"
-#include "shell_encryption/ntt_parameters.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 // This file implements various discrete Fourier transformtions to be used by
 // arithmetic in polynomial rings.

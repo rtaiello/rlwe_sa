@@ -18,7 +18,7 @@ syntax = "proto2";
 
 package rlwe;
 
-import "shell_encryption/serialization.proto";
+import "rlwe_sa/cc/shell_encryption/serialization.proto";
 
 // RNS polynomial.
 message SerializedRnsPolynomial {

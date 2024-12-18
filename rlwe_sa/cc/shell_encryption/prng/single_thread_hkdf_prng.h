@@ -32,9 +32,9 @@
 #define RLWE_SINGLE_THREAD_HKDF_PRNG_H_
 
 #include "absl/strings/string_view.h"
-#include "shell_encryption/prng/hkdf_prng_util.h"
-#include "shell_encryption/prng/prng.h"
-#include "shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/prng/hkdf_prng_util.h"
+#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
 
 namespace rlwe {
 

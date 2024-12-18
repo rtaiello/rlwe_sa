@@ -24,9 +24,9 @@
 #include "absl/strings/str_cat.h"
 #include "absl/types/span.h"
 #include "hwy/aligned_allocator.h"
-#include "shell_encryption/rns/rns_modulus.h"
-#include "shell_encryption/rns/rns_polynomial.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 namespace rlwe {
 

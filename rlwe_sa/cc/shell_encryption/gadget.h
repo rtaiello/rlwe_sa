@@ -19,8 +19,8 @@
 #include <cstddef>
 #include <vector>
 
-#include "shell_encryption/status_macros.h"
-#include "shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
 
 // Common methods for working with "gadgets". These are ways of representing
 // large norm (but small dimension) objects with small norm (but large

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/rns/rns_gadget.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_gadget.h"
 
 #include <cstddef>
 #include <vector>
@@ -23,14 +23,14 @@
 #include "absl/status/statusor.h"
 #include "absl/strings/str_cat.h"
 #include "absl/types/span.h"
-#include "shell_encryption/gadget.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/modulus_conversion.h"
-#include "shell_encryption/montgomery.h"
-#include "shell_encryption/rns/rns_integer.h"
-#include "shell_encryption/rns/rns_modulus.h"
-#include "shell_encryption/rns/rns_polynomial.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/gadget.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/modulus_conversion.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_integer.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 namespace rlwe {
 

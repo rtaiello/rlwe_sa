@@ -20,9 +20,9 @@
 
 #include "absl/status/statusor.h"
 #include "absl/types/span.h"
-#include "shell_encryption/rns/rns_context.h"
-#include "shell_encryption/rns/rns_modulus.h"
-#include "shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
 
 namespace rlwe {
 

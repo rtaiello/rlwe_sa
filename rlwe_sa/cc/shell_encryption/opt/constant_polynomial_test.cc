@@ -13,15 +13,15 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/opt/constant_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/opt/constant_polynomial.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "shell_encryption/context.h"
-#include "shell_encryption/polynomial.h"  // Needs to be included since Polynomial is forward declarated.
-#include "shell_encryption/testing/parameters.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/context.h"
+#include "rlwe_sa/cc/shell_encryption/polynomial.h"  // Needs to be included since Polynomial is forward declarated.
+#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
 
 namespace {
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "shell_encryption/rns/rns_polynomial_hwy.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial_hwy.h"
 
 #include <cstdint>
 #include <vector>
@@ -20,13 +20,13 @@
 #include "absl/numeric/int128.h"
 #include "absl/types/span.h"
 #include "hwy/detect_targets.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
 
 // Highway implementations.
 // clang-format off
 #undef HWY_TARGET_INCLUDE
-#define HWY_TARGET_INCLUDE "shell_encryption/rns/rns_polynomial_hwy.cc"
+#define HWY_TARGET_INCLUDE "rlwe_sa/cc/shell_encryption/rns/rns_polynomial_hwy.cc"
 #include "hwy/foreach_target.h"  // IWYU pragma: keep
 // clang-format on
 

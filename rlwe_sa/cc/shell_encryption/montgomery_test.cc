@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
 
 #include <cstdint>
 #include <limits>
@@ -23,13 +23,13 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/numeric/int128.h"
-#include "shell_encryption/constants.h"
-#include "shell_encryption/serialization.pb.h"
-#include "shell_encryption/status_macros.h"
-#include "shell_encryption/testing/parameters.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
-#include "shell_encryption/testing/testing_prng.h"
+#include "rlwe_sa/cc/shell_encryption/constants.h"
+#include "rlwe_sa/cc/shell_encryption/serialization.pb.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/testing/testing_prng.h"
 
 namespace rlwe {
 namespace {

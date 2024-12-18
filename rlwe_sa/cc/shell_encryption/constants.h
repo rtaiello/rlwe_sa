@@ -19,7 +19,7 @@
 #include <cstdint>
 
 #include "absl/numeric/int128.h"
-#include "shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
 
 namespace rlwe {
 

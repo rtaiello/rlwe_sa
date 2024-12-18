@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/int256.h"
+#include "rlwe_sa/cc/shell_encryption/int256.h"
 
 #include <algorithm>
 #include <random>

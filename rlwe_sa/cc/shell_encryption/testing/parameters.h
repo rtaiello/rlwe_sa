@@ -21,10 +21,10 @@
 
 #include <gmock/gmock.h>
 #include "absl/numeric/int128.h"
-#include "shell_encryption/constants.h"
-#include "shell_encryption/context.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/constants.h"
+#include "rlwe_sa/cc/shell_encryption/context.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
 
 namespace rlwe {
 namespace testing {

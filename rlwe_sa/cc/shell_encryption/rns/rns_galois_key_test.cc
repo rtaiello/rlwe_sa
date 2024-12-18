@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/rns/rns_galois_key.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_galois_key.h"
 
 #include <cmath>
 #include <cstddef>
@@ -25,20 +25,20 @@
 #include "absl/log/check.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
-#include "shell_encryption/rns/finite_field_encoder.h"
-#include "shell_encryption/rns/rns_bfv_ciphertext.h"
-#include "shell_encryption/rns/rns_bgv_ciphertext.h"
-#include "shell_encryption/rns/rns_context.h"
-#include "shell_encryption/rns/rns_error_params.h"
-#include "shell_encryption/rns/rns_gadget.h"
-#include "shell_encryption/rns/rns_modulus.h"
-#include "shell_encryption/rns/rns_polynomial.h"
-#include "shell_encryption/rns/rns_secret_key.h"
-#include "shell_encryption/rns/testing/parameters.h"
-#include "shell_encryption/rns/testing/testing_utils.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
-#include "shell_encryption/testing/testing_prng.h"
+#include "rlwe_sa/cc/shell_encryption/rns/finite_field_encoder.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_bfv_ciphertext.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_bgv_ciphertext.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_error_params.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_gadget.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_secret_key.h"
+#include "rlwe_sa/cc/shell_encryption/rns/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/rns/testing/testing_utils.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/testing/testing_prng.h"
 
 namespace rlwe {
 namespace {

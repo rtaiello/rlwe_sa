@@ -24,13 +24,13 @@
 #include <vector>
 
 #include "absl/status/status.h"
-#include "shell_encryption/error_params.h"
-#include "shell_encryption/opt/lazy_polynomial.h"
-#include "shell_encryption/polynomial.h"
-#include "shell_encryption/prng/prng.h"
-#include "shell_encryption/sample_error.h"
-#include "shell_encryption/serialization.pb.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/error_params.h"
+#include "rlwe_sa/cc/shell_encryption/opt/lazy_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
+#include "rlwe_sa/cc/shell_encryption/sample_error.h"
+#include "rlwe_sa/cc/shell_encryption/serialization.pb.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 namespace rlwe {
 

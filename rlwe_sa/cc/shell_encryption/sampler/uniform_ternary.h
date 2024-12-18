@@ -21,9 +21,9 @@
 
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/prng/prng.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 namespace rlwe {
 

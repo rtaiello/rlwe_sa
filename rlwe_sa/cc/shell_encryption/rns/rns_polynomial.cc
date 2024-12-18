@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
 
 #include <cmath>
 #include <vector>
 
-#include "shell_encryption/dft_transformations.h"
-#include "shell_encryption/modulus_conversion.h"
+#include "rlwe_sa/cc/shell_encryption/dft_transformations.h"
+#include "rlwe_sa/cc/shell_encryption/modulus_conversion.h"
 
 namespace rlwe {
 

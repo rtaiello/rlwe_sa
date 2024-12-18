@@ -22,12 +22,12 @@
 
 #include "absl/strings/str_cat.h"
 #include "absl/types/span.h"
-#include "shell_encryption/montgomery.h"
-#include "shell_encryption/rns/lazy_rns_polynomial.h"
-#include "shell_encryption/rns/rns_error_params.h"
-#include "shell_encryption/rns/rns_polynomial.h"
-#include "shell_encryption/rns/serialization.pb.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/rns/lazy_rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_error_params.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/rns/serialization.pb.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 namespace rlwe {
 

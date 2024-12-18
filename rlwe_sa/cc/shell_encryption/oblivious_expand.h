@@ -23,13 +23,13 @@
 
 #include "absl/memory/memory.h"
 #include "absl/status/status.h"
-#include "shell_encryption/galois_key.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/ntt_parameters.h"
-#include "shell_encryption/polynomial.h"
-#include "shell_encryption/status_macros.h"
-#include "shell_encryption/statusor.h"
-#include "shell_encryption/symmetric_encryption.h"
+#include "rlwe_sa/cc/shell_encryption/galois_key.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
+#include "rlwe_sa/cc/shell_encryption/polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
 
 namespace rlwe {
 

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/rns/rns_public_key.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_public_key.h"
 
 #include <memory>
 #include <string>
@@ -23,16 +23,16 @@
 #include "absl/numeric/int128.h"
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/montgomery.h"
-#include "shell_encryption/prng/prng.h"
-#include "shell_encryption/prng/single_thread_chacha_prng.h"
-#include "shell_encryption/prng/single_thread_hkdf_prng.h"
-#include "shell_encryption/rns/error_distribution.h"
-#include "shell_encryption/rns/rns_modulus.h"
-#include "shell_encryption/rns/rns_polynomial.h"
-#include "shell_encryption/rns/rns_secret_key.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
+#include "rlwe_sa/cc/shell_encryption/prng/single_thread_chacha_prng.h"
+#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "rlwe_sa/cc/shell_encryption/rns/error_distribution.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_secret_key.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 namespace rlwe {
 

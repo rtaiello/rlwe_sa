@@ -27,13 +27,13 @@
 #include <glog/logging.h>
 #include "absl/numeric/int128.h"
 #include "absl/strings/str_cat.h"
-#include "shell_encryption/bits_util.h"
-#include "shell_encryption/constants.h"
-#include "shell_encryption/int256.h"
-#include "shell_encryption/prng/prng.h"
-#include "shell_encryption/serialization.pb.h"
-#include "shell_encryption/status_macros.h"
-#include "shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/bits_util.h"
+#include "rlwe_sa/cc/shell_encryption/constants.h"
+#include "rlwe_sa/cc/shell_encryption/int256.h"
+#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
+#include "rlwe_sa/cc/shell_encryption/serialization.pb.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
 
 namespace rlwe {
 

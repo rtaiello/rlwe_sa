@@ -17,7 +17,7 @@
 
 #include "absl/types/span.h"
 #include "hwy/aligned_allocator.h"
-#include "shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
 
 namespace rlwe {
 namespace internal {

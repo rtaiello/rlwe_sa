@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "shell_encryption/rns/rns_error_params.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_error_params.h"
 
 #include <cmath>
 #include <string>
@@ -24,19 +24,19 @@
 #include "absl/random/random.h"
 #include "absl/status/status.h"
 #include "absl/types/span.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/prng/single_thread_hkdf_prng.h"
-#include "shell_encryption/rns/coefficient_encoder.h"
-#include "shell_encryption/rns/crt_interpolation.h"
-#include "shell_encryption/rns/error_distribution.h"
-#include "shell_encryption/rns/rns_context.h"
-#include "shell_encryption/rns/rns_modulus.h"
-#include "shell_encryption/rns/rns_polynomial.h"
-#include "shell_encryption/rns/testing/parameters.h"
-#include "shell_encryption/rns/testing/testing_utils.h"
-#include "shell_encryption/testing/parameters.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
+#include "rlwe_sa/cc/shell_encryption/rns/coefficient_encoder.h"
+#include "rlwe_sa/cc/shell_encryption/rns/crt_interpolation.h"
+#include "rlwe_sa/cc/shell_encryption/rns/error_distribution.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/rns/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/rns/testing/testing_utils.h"
+#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
 
 namespace rlwe {
 namespace {

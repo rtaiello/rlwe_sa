@@ -13,21 +13,21 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/symmetric_encryption_with_prng.h"
+#include "rlwe_sa/cc/shell_encryption/symmetric_encryption_with_prng.h"
 
 #include <vector>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include "shell_encryption/context.h"
-#include "shell_encryption/montgomery.h"
-#include "shell_encryption/ntt_parameters.h"
-#include "shell_encryption/polynomial.h"
-#include "shell_encryption/status_macros.h"
-#include "shell_encryption/testing/parameters.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
-#include "shell_encryption/testing/testing_utils.h"
+#include "rlwe_sa/cc/shell_encryption/context.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
+#include "rlwe_sa/cc/shell_encryption/polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/testing/testing_utils.h"
 
 namespace rlwe {
 namespace {

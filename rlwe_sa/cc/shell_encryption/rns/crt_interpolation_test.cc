@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/rns/crt_interpolation.h"
+#include "rlwe_sa/cc/shell_encryption/rns/crt_interpolation.h"
 
 #include <vector>
 
@@ -22,15 +22,15 @@
 #include "absl/numeric/int128.h"
 #include "absl/random/random.h"
 #include "absl/status/status.h"
-#include "shell_encryption/int256.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/montgomery.h"
-#include "shell_encryption/rns/rns_context.h"
-#include "shell_encryption/rns/testing/parameters.h"
-#include "shell_encryption/status_macros.h"
-#include "shell_encryption/testing/parameters.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/int256.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_context.h"
+#include "rlwe_sa/cc/shell_encryption/rns/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/testing/parameters.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
 
 namespace rlwe {
 namespace {

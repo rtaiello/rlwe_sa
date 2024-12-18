@@ -21,11 +21,11 @@
 #include <cstdint>
 #include <vector>
 
-#include "shell_encryption/error_params.h"
-#include "shell_encryption/polynomial.h"
-#include "shell_encryption/statusor.h"
-#include "shell_encryption/symmetric_encryption.h"
-#include "shell_encryption/testing/coefficient_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/error_params.h"
+#include "rlwe_sa/cc/shell_encryption/polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
+#include "rlwe_sa/cc/shell_encryption/testing/coefficient_polynomial.h"
 
 namespace rlwe {
 namespace testing {

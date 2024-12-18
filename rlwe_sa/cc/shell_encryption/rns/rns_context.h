@@ -21,10 +21,10 @@
 #include <vector>
 
 #include "absl/types/span.h"
-#include "shell_encryption/montgomery.h"
-#include "shell_encryption/ntt_parameters.h"
-#include "shell_encryption/rns/rns_integer.h"
-#include "shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/montgomery.h"
+#include "rlwe_sa/cc/shell_encryption/ntt_parameters.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_integer.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
 
 namespace rlwe {
 

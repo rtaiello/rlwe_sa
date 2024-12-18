@@ -19,9 +19,9 @@
 #include <cstdint>
 #include <vector>
 
-#include "shell_encryption/sample_error.h"
-#include "shell_encryption/statusor.h"
-#include "shell_encryption/symmetric_encryption.h"
+#include "rlwe_sa/cc/shell_encryption/sample_error.h"
+#include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/symmetric_encryption.h"
 
 namespace rlwe {
 // Represents a RelinearizationKey constructed from a symmetric-key sk. Applying

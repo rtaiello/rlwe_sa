@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "shell_encryption/sampler/discrete_gaussian.h"
+#include "rlwe_sa/cc/shell_encryption/sampler/discrete_gaussian.h"
 
 #include <cmath>
 #include <memory>
@@ -23,10 +23,10 @@
 #include <gtest/gtest.h>
 #include "absl/numeric/int128.h"
 #include "absl/status/status.h"
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/testing/status_matchers.h"
-#include "shell_encryption/testing/status_testing.h"
-#include "shell_encryption/testing/testing_prng.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_matchers.h"
+#include "rlwe_sa/cc/shell_encryption/testing/status_testing.h"
+#include "rlwe_sa/cc/shell_encryption/testing/testing_prng.h"
 
 namespace rlwe {
 namespace {

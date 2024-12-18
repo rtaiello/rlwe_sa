@@ -21,13 +21,13 @@
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
 #include "absl/types/span.h"
-#include "shell_encryption/prng/prng.h"
-#include "shell_encryption/rns/rns_modulus.h"
-#include "shell_encryption/rns/rns_polynomial.h"
-#include "shell_encryption/sample_error.h"
-#include "shell_encryption/sampler/discrete_gaussian.h"
-#include "shell_encryption/sampler/uniform_ternary.h"
-#include "shell_encryption/status_macros.h"
+#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_modulus.h"
+#include "rlwe_sa/cc/shell_encryption/rns/rns_polynomial.h"
+#include "rlwe_sa/cc/shell_encryption/sample_error.h"
+#include "rlwe_sa/cc/shell_encryption/sampler/discrete_gaussian.h"
+#include "rlwe_sa/cc/shell_encryption/sampler/uniform_ternary.h"
+#include "rlwe_sa/cc/shell_encryption/status_macros.h"
 
 namespace rlwe {
 

@@ -18,8 +18,8 @@
 
 #include <random>
 
-#include "shell_encryption/integral_types.h"
-#include "shell_encryption/prng/prng.h"
+#include "rlwe_sa/cc/shell_encryption/integral_types.h"
+#include "rlwe_sa/cc/shell_encryption/prng/prng.h"
 
 namespace rlwe {
 namespace testing {
