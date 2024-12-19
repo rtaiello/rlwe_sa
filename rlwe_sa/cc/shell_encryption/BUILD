@@ -116,6 +116,7 @@ cc_library(
         ":error_params",
         ":statusor_fork",
         "//rlwe_sa/cc/shell_encryption/prng",
+        "//rlwe_sa/cc/shell_encryption/sampler:discrete_gaussian",
         "@com_google_absl//absl/strings",
     ],
 )

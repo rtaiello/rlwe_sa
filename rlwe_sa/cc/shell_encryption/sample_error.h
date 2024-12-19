@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Google LLC.
+ * Copyright 2023 Google LLC.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,6 +18,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <memory>
 
 #include "absl/strings/str_cat.h"
 #include "rlwe_sa/cc/shell_encryption/bits_util.h"
@@ -26,6 +27,7 @@
 #include "rlwe_sa/cc/shell_encryption/prng/prng.h"
 #include "rlwe_sa/cc/shell_encryption/status_macros.h"
 #include "rlwe_sa/cc/shell_encryption/statusor.h"
+#include "rlwe_sa/cc/shell_encryption/sampler/discrete_gaussian.h"
 
 namespace rlwe {
 
@@ -37,7 +39,7 @@ namespace rlwe {
 // timing attacks.
 //
 // [1] "Post-quantum key exchange -- a new hope", Erdem Alkim, Leo Ducas, Thomas
-// Poppelmann, Peter Schwabe, USENIX Security Sumposium.
+// Poppelmann, Peter Schwabe, USENIX Security Symposium.
 //
 // All values sampled are multiplied by scalar.
 template <typename ModularInt>
@@ -51,9 +53,6 @@ static rlwe::StatusOr<std::vector<ModularInt>> SampleFromErrorDistribution(
   auto zero = ModularInt::ImportZero(modulus_params);
   std::vector<ModularInt> coeffs(num_coeffs, zero);
 
-  // Sample from the centered binomial distribution. To do so, we sample k pairs
-  // of bits (a, b), where k = 2 * variance. The sample of the binomial
-  // distribution is the sum of the differences between each pair of bits.
   Uint64 k;
   typename ModularInt::Int coefficient;
 
@@ -63,14 +62,12 @@ static rlwe::StatusOr<std::vector<ModularInt>> SampleFromErrorDistribution(
 
     while (k > 0) {
       if (k >= 64) {
-        // Use 64 bits of randomness
         RLWE_ASSIGN_OR_RETURN(auto r64, prng->Rand64());
         coefficient += rlwe::internal::CountOnes64(r64);
         RLWE_ASSIGN_OR_RETURN(r64, prng->Rand64());
         coefficient -= rlwe::internal::CountOnes64(r64);
         k -= 64;
       } else if (k >= 8) {
-        // Use 8 bits of randomness
         RLWE_ASSIGN_OR_RETURN(auto r8, prng->Rand8());
         coefficient += rlwe::internal::CountOnesInByte(r8);
         RLWE_ASSIGN_OR_RETURN(r8, prng->Rand8());
@@ -86,14 +83,39 @@ static rlwe::StatusOr<std::vector<ModularInt>> SampleFromErrorDistribution(
       }
     }
 
-    // coefficient is in the interval [modulus - 2k, modulus + 2k]. We reduce
-    // it in [0, modulus). Since ModularInt::Int is unsigned, we create a mask
-    // equal to 0xFF...FF when coefficient >= modulus, and equal to 0 otherwise.
     typename ModularInt::Int mask = -(coefficient >= modulus_params->modulus);
     coefficient -= mask & modulus_params->modulus;
 
     RLWE_ASSIGN_OR_RETURN(coeffs[i],
                           ModularInt::ImportInt(coefficient, modulus_params));
+  }
+
+  return coeffs;
+}
+
+// Samples a vector of coefficients using a discrete Gaussian distribution.
+// This function utilizes the DiscreteGaussianSampler class to generate samples
+// with center 0 and the specified standard deviation.
+template <typename ModularInt>
+static rlwe::StatusOr<std::vector<ModularInt>> SampleFromDiscreteGaussian(
+    unsigned int num_coeffs, double stddev, SecurePrng* prng,
+    const typename ModularInt::Params* modulus_params) {
+  if (stddev < 0) {
+    return absl::InvalidArgumentError("Standard deviation must be non-negative.");
+  }
+  // Gaussian parameter of the base sampler.
+  constexpr double kBaseS = 12.8;
+  RLWE_ASSIGN_OR_RETURN(
+      auto sampler,
+      DiscreteGaussianSampler<Uint64>::Create(kBaseS));
+
+  auto zero = ModularInt::ImportZero(modulus_params);
+  std::vector<ModularInt> coeffs(num_coeffs, zero);
+
+  for (unsigned int i = 0; i < num_coeffs; ++i) {
+    RLWE_ASSIGN_OR_RETURN(auto sample, sampler->Sample(stddev, *prng));
+    RLWE_ASSIGN_OR_RETURN(coeffs[i],
+                          ModularInt::ImportInt(sample, modulus_params));
   }
 
   return coeffs;
