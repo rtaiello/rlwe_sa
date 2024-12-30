@@ -52,7 +52,7 @@ namespace {
 
   // Set constants.
   const int kTestingRounds = 1;
-  const int LOG_T = 72;
+  const int ptxtModulus = 73; // consider ctxtModulus = 80 and log_2(error) ~ 6
 
   template < typename ModularInt >
     class RlweSecAggTest: public::testing::Test {};
@@ -66,7 +66,7 @@ namespace {
     };
     std::vector < rlwe_sec_agg_test > test_cases = {
       {
-        static_cast < int > (pow(2, 11)), LOG_T
+        static_cast < int > (pow(2, 11)), ptxtModulus
       },
       // {static_cast<int>(pow(2,15)), 13},
       // {static_cast<int>(pow(2,15)), 15},
@@ -94,7 +94,7 @@ namespace {
     };
     std::vector < rlwe_sec_agg_test > test_cases = {
       {
-        static_cast < int > (pow(2, 11)), LOG_T
+        static_cast < int > (pow(2, 11)), ptxtModulus
       },
       // {static_cast<int>(pow(2,15)), 13},
       // {static_cast<int>(pow(2,15)), 15},
@@ -118,7 +118,7 @@ namespace {
   TYPED_TEST(RlweSecAggTest, CanSumKey) {
     int n = 10;
     int input_size = pow(2, 11);
-    int log_t = LOG_T;
+    int log_t = ptxtModulus;
     for (int i = 0; i < kTestingRounds; i++) {
 
       RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
@@ -141,7 +141,8 @@ namespace {
   TYPED_TEST(RlweSecAggTest, Add) {
     int n = 10;
     int input_size = pow(2, 13);
-    int log_t = LOG_T;
+    // remove log(n) from the modulus to avoid overflow
+    int log_t = ptxtModulus - log2(n);
     typename TypeParam::Int mod_t = (absl::uint128{1} << log_t) + 1;  
     for (int i = 0; i < kTestingRounds; i++) {
       RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);

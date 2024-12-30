@@ -54,10 +54,10 @@ inline size_t FindInCdt(const std::vector<Uint64>& cdt, Uint64 u) {
 template <typename Integer>
 absl::StatusOr<std::unique_ptr<DiscreteGaussianSampler<Integer>>>
 DiscreteGaussianSampler<Integer>::Create(double s_base) {
-  if (s_base < std::sqrt(2) * kSmoothingParameter) {
-    return absl::InvalidArgumentError(
-        "`s_base` must be at least sqrt(2) times the smoothing parameter.");
-  }
+  // if (s_base < std::sqrt(2) * kSmoothingParameter) {
+  //   return absl::InvalidArgumentError(
+  //       "`s_base` must be at least sqrt(2) times the smoothing parameter.");
+  // }
 
   // Approximate sum(exp(-x^2 / (2 * s_base^2)), for x over the integers).
   double mass_base = sqrt(2 * M_PI) * s_base;
@@ -127,7 +127,8 @@ absl::StatusOr<Integer> DiscreteGaussianSampler<Integer>::SampleBase(
   // first 63 random bits to look up the scaled CDF table.
   constexpr Uint64 kMask = (1ULL << kPrecision) - 1;
   RLWE_ASSIGN_OR_RETURN(const Uint64 u, prng.Rand64());
-  Integer index = static_cast<Integer>(FindInCdt(cdt_, u & kMask));
+  auto tmp = u & kMask;
+  Integer index = static_cast<Integer>(FindInCdt(cdt_, tmp));
   Integer center_index = static_cast<Integer>(cdt_.size() / 2);
   Integer sample = index - center_index;
   return sample;

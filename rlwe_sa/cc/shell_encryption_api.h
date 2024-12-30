@@ -94,14 +94,14 @@ static std::vector<std::vector<typename ModularInt::Int>> splitVector(const std:
 }
 
 public:
-  RlweSecAgg(int input_size, size_t log_t, std::string seed = std::string()) {
+  RlweSecAgg(int input_size, size_t log_t, std::string seed = std::string(), double stddev = 4.5) {
   _input_size = input_size;
   // Compute log_2 of t
    const auto& params = typename rlwe::RlweContext<ModularInt>::Parameters{
             /*.modulus =*/static_cast<absl::uint128>(rlwe::kModulus80),
             /*.log_n =*/11,
             /*.log_t =*/log_t,
-            /*.variance =*/8};
+            /*.variance =*/std::pow(stddev, 2)};
     ASSERT_OK_AND_ASSIGN(_context_ptr, rlwe::RlweContext<ModularInt>::Create(params));
     // _context_ptr = _context;
     ASSERT_OK_AND_ASSIGN(auto prng, GetPrg(seed));
@@ -126,7 +126,6 @@ public:
     ASSERT_OK_AND_ASSIGN(auto key, rlwe::SymmetricRlweKey<ModularInt>::Sample(
         _context_ptr->GetLogN(), _context_ptr->GetVariance(), _context_ptr->GetLogT(),
         _context_ptr->GetModulusParams(), _context_ptr->GetNttParams(), prng.get()));
-
     return key;
   }
  
@@ -203,7 +202,7 @@ static std::vector<typename ModularInt::Int> SamplePlaintext(
       rlwe::Uint64 rand = mt_rand();
       typename ModularInt::Int int_rand =
           static_cast<typename ModularInt::Int>(rand);
-      plaintext[i] = value; //int_rand % t;
+      plaintext[i] = int_rand % t;
     }
     return plaintext;
   }

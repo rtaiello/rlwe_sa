@@ -46,7 +46,7 @@ class RlweContext {
     Int modulus;
     size_t log_n;
     size_t log_t;
-    size_t variance;
+    double variance;
   };
 
   // Factory function to create a context from a context_params.
@@ -109,6 +109,7 @@ class RlweContext {
   const Int GetT() const {
     return (static_cast<Int>(1) << context_params_.log_t) + static_cast<Int>(1);
   }
+  const double GetStdDev() const { return std::sqrt(context_params_.variance); }
   const size_t GetVariance() const { return context_params_.variance; }
 
  private:

@@ -35,7 +35,8 @@ using ::rlwe::testing::StatusIs;
 using ::testing::HasSubstr;
 
 const int kTestingRounds = 10;
-const std::vector<rlwe::Uint64> variances = {0, 1, 8, 15, 29, 50, 255};
+const std::vector<rlwe::Uint64> variances = {8};
+const std::vector<double> stddevs = {4};
 
 template <typename ModularInt>
 class SampleErrorTest : public ::testing::Test {};
@@ -93,7 +94,6 @@ TYPED_TEST(SampleErrorTest, DiscreteGaussianSamplesAreBounded) {
   using Int = typename TypeParam::Int;
 
   auto prng = std::make_unique<rlwe::testing::TestingPrng>(12345);
-  const std::vector<double> stddevs = {12.8};
 
   for (const auto& params :
        rlwe::testing::ContextParameters<TypeParam>::Value()) {

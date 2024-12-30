@@ -658,12 +658,12 @@ class SymmetricRlweKey {
   //
   // Does not take ownership of rand, modulus_params or ntt_params.
   static rlwe::StatusOr<SymmetricRlweKey> Sample(
-      unsigned int log_num_coeffs, uint64_t variance, uint64_t log_t,
+      unsigned int log_num_coeffs, double variance, uint64_t log_t,
       const typename ModularInt::Params* modulus_params,
       const NttParameters<ModularInt>* ntt_params, SecurePrng* prng) {
     RLWE_ASSIGN_OR_RETURN(
-        auto error, SampleFromErrorDistribution<ModularInt>(
-                        1 << log_num_coeffs, variance, prng, modulus_params));
+        auto error, SampleFromDiscreteGaussian<ModularInt>(
+                        1 << log_num_coeffs, std::sqrt(variance), prng, modulus_params));
     Polynomial<ModularInt> key = Polynomial<ModularInt>::ConvertToNtt(
         std::move(error), ntt_params, modulus_params);
     RLWE_ASSIGN_OR_RETURN(auto result,
@@ -672,7 +672,7 @@ class SymmetricRlweKey {
     return result;
       }
   static rlwe::StatusOr<SymmetricRlweKey> CreateKey(
-      const Polynomial<ModularInt>& key, uint64_t variance, uint64_t log_t,
+      const Polynomial<ModularInt>& key, double variance, uint64_t log_t,
       const typename ModularInt::Params* modulus_params,
       const NttParameters<ModularInt>* ntt_params) {
 
@@ -692,7 +692,7 @@ class SymmetricRlweKey {
   // Deserialize using modulus params as also the plaintext modulus params. Use
   // this when deserializing a non-modulus switched key.
   static rlwe::StatusOr<SymmetricRlweKey> Deserialize(
-      Uint64 variance, Uint64 log_t,
+      double variance, Uint64 log_t,
       const SerializedNttPolynomial& serialized_key,
       const typename ModularInt::Params* modulus_params,
       const NttParameters<ModularInt>* ntt_params) {
@@ -701,7 +701,7 @@ class SymmetricRlweKey {
   }
 
   static rlwe::StatusOr<SymmetricRlweKey> Deserialize(
-      Uint64 variance, Uint64 log_t,
+      double variance, Uint64 log_t,
       const SerializedNttPolynomial& serialized_key,
       const typename ModularInt::Params* modulus_params,
       const typename ModularInt::Params* plaintext_modulus_params,
@@ -802,7 +802,9 @@ class SymmetricRlweKey {
     return modulus_params_;
   }
   const unsigned int BitsPerCoeff() const { return log_t_; }
-  const Uint64 Variance() const { return variance_; }
+  const double Variance() const { return variance_; }
+  const double StdDev() const { return static_cast<double>(std::sqrt(variance_)); }
+
   const unsigned int LogT() const { return log_t_; }
   const ModularInt& PlaintextModulus() const { return t_mod_; }
   const typename ModularInt::Params* PlaintextModulusParams() const {
@@ -878,7 +880,7 @@ class SymmetricRlweKey {
 
   // The variance of the binomial distribution from which the key and error are
   // drawn.
-  Uint64 variance_;
+  double variance_;
 
   // The maximum size of any one coefficient of the polynomial representing a
   // plaintext message.
@@ -893,7 +895,7 @@ class SymmetricRlweKey {
   const typename ModularInt::Params* plaintext_modulus_params_;
 
   // A constructor. Does not take ownership of params.
-  SymmetricRlweKey(Polynomial<ModularInt> key, Uint64 variance,
+  SymmetricRlweKey(Polynomial<ModularInt> key, double variance,
                    unsigned int log_t, ModularInt t_mod,
                    const typename ModularInt::Params* modulus_params,
                    const typename ModularInt::Params* plaintext_modulus_params,
@@ -982,18 +984,26 @@ rlwe::StatusOr<Polynomial<ModularInt>> Encrypt(
   unsigned int num_coeffs = key.Len();
   RLWE_ASSIGN_OR_RETURN(
       std::vector<ModularInt> e_coeffs,
-      SampleFromErrorDistribution<ModularInt>(num_coeffs, key.Variance(), prng,
+      SampleFromDiscreteGaussian<ModularInt>(num_coeffs, key.StdDev(), prng,
                                               key.ModulusParams()));
-
+  // HINT-RLWE: The error term is sampled from a discrete Gaussian distribution
+  RLWE_ASSIGN_OR_RETURN(std::vector<ModularInt> f_coeffs,
+                        SampleFromDiscreteGaussian<ModularInt>(
+                            num_coeffs, key.StdDev(), prng,
+                            key.ModulusParams()));
   // Create and return c0.
   auto c0 = Polynomial<ModularInt>::ConvertToNtt(
       std::move(e_coeffs), key.NttParams(), key.ModulusParams());  // c0 = e
+  auto c0_f = Polynomial<ModularInt>::ConvertToNtt(
+      std::move(f_coeffs), key.NttParams(), key.ModulusParams());  // c0 = f
+  // sum of e and f
+  RLWE_RETURN_IF_ERROR(c0.AddInPlace(c0_f, key.ModulusParams())); // c0 = e + f
   RLWE_RETURN_IF_ERROR(c0.MulInPlace(key.PlaintextModulus(),
-                                     key.ModulusParams()));  // c0 = e * t
+                                     key.ModulusParams()));  // c0 = (e +f) * t
   RLWE_RETURN_IF_ERROR(
-      c0.AddInPlace(plaintext, key.ModulusParams()));  // c0 = e * t + m
+      c0.AddInPlace(plaintext, key.ModulusParams()));  // c0 = (e +f) * t + m
   RLWE_RETURN_IF_ERROR(c0.FusedMulAddInPlace(
-      a, key.Key(), key.ModulusParams()));  // c0 = e * t + m + a * key
+      a, key.Key(), key.ModulusParams()));  // c0 = (e +f)* t + m + a * key
   return c0;
 }
 
