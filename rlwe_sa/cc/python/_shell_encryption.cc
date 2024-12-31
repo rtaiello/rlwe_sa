@@ -14,16 +14,25 @@ using ModularInt = rlwe::MontgomeryInt<absl::uint128>;
 // Convert absl::uint128 to Python int
 py::object Uint128ToPyInt(const absl::uint128& val) {
     // Convert absl::uint128 to Python integer
-    // Use Python's built-in int constructors to handle large integers
     uint64_t high = absl::Uint128High64(val);
     uint64_t low = absl::Uint128Low64(val);
     
-    // Reconstruct the full integer in Python
-    py::object py_high = py::int_(high);
-    py::object py_low = py::int_(low);
-    
-    // Shift high part and combine with low part
-    return py_high * py::int_(1ULL << 64) + py_low;
+    if (high == 0) {
+        return py::int_(low);
+    } else {
+        // Create the high part first as a Python integer
+        py::object result = py::int_(high);
+        
+        // Multiply by 2^64 using Python's arithmetic
+        result = result.attr("__lshift__")(64);
+        
+        // Add the low part
+        if (low != 0) {
+            result = result.attr("__or__")(low);
+        }
+        
+        return result;
+    }
 }
 
 absl::uint128 convert_python_int_to_uint128(py::object py_int) {
@@ -63,9 +72,8 @@ PYBIND11_MODULE(_shell_encryption, m) {
                    const py::list& plaintext) {
     std::vector<absl::uint128> converted_plaintext;
     for (py::handle value : plaintext) {
-        // converted_plaintext.push_back(convert_python_int_to_uint128(py::reinterpret_borrow<py::object>(value)));
+        converted_plaintext.push_back(convert_python_int_to_uint128(py::reinterpret_borrow<py::object>(value)));
         
-        converted_plaintext.push_back(absl::MakeUint128(1ULL << 6, 0));
 
     }
     return self.Encrypt(key, converted_plaintext);
@@ -75,22 +83,11 @@ PYBIND11_MODULE(_shell_encryption, m) {
                     const std::vector<rlwe::SymmetricRlweCiphertext<rlwe::MontgomeryInt<absl::uint128>>>& ciphertexts) {
         // Call the original Decrypt function
         auto result = self.Decrypt(key, ciphertexts);
-
-        // Convert std::vector<absl::uint128> to Python list of ints
+        // // Convert std::vector<absl::uint128> to Python list of ints
         std::vector<py::int_> py_result;
+        for (const absl::uint128& val : result) {
 
-        std::cout << "Decrypted values (first 10):" << std::endl;
-        int count = 0;
-        for (const auto& val : result) {
-            py_result.push_back(Uint128ToPyInt(val));
-            
-            // Print the first 10 values to the console
-            if (count < 10) {
-                uint64_t high = absl::Uint128High64(val);
-                uint64_t low = absl::Uint128Low64(val);
-                std::cout << "Value " << count << ": high=" << high << ", low=" << low << std::endl;
-                ++count;
-            }
+            py_result.push_back(py::int_(Uint128ToPyInt(val)));
         }
 
         return py_result;  // Return as Python list
