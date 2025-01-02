@@ -44,7 +44,8 @@ This library provides a user-friendly Python API for secure aggregation based on
 
 ## Usage
 
-Here’s an example of how to run the tests for the Secure Aggregation Library:
+You can find an example usage of the library in this [Jupyter Notebook](https://github.com/rtaiello/rlwe_sa/blob/main/test_nb/test.ipynb).
+
 
 
 ---
