@@ -1,5 +1,6 @@
 import rlwe_sa.cc.python._shell_encryption as rlwe_sa
 import time
+from math import log2, ceil, floor
 
 def assert_encryption_decryption(input_size, ptxt_bits):
     rlwe_sec_agg = rlwe_sa.RlweSecAgg(input_size, ptxt_bits)
@@ -55,7 +56,8 @@ def assert_aggregation(input_size, ptxt_bits, modulus):
     sk_sum = rlwe_sec_agg.create_key(sk_sum_vector)
     ciphertext_sum = rlwe_sec_agg.aggregate(ciphertext_1, ciphertext_2)
     decrypted_sum = rlwe_sec_agg.decrypt(sk_sum, ciphertext_sum)
-    assert decrypted_sum == plaintext_sum
+    for i in range(input_size):
+        assert decrypted_sum[i] == plaintext_sum[i], "position: " + str(i) + "value: " + str(decrypted_sum[i]) + "!=" + str(plaintext_sum[i])
 
 
 def assert_multiple_aggregation(num_clients, input_size, ptxt_bits, modulus):
@@ -97,11 +99,12 @@ def assert_multiple_aggregation(num_clients, input_size, ptxt_bits, modulus):
 
 
 input_size = 2**17
-ptxt_bits = 16
-modulus = 332366567264636929
 num_clients = 5
+ptxt_bits = 73
+modulus = 646119422561999443726337
 
 assert_encryption_decryption(input_size, ptxt_bits)
 assert_sum_key(input_size, ptxt_bits, modulus)
-assert_aggregation(input_size, ptxt_bits, modulus)
-assert_multiple_aggregation(num_clients, input_size, ptxt_bits, modulus)
+assert_aggregation(input_size, ceil(ptxt_bits - log2(2)), modulus)
+assert_multiple_aggregation(num_clients, input_size, ceil(ptxt_bits - log2(num_clients)), modulus)
+print("All tests passed")
