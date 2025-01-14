@@ -23,6 +23,7 @@
 #include "rlwe_sa/cc/shell_encryption/polynomial.h"
 #include "rlwe_sa/cc/shell_encryption/prng/single_thread_hkdf_prng.h"
 #include "absl/numeric/int128.h"
+#include "rlwe_sa/cc/shell_encryption/modulus_conversion.h"
 
 
 #undef ASSERT_OK_AND_ASSIGN
@@ -41,7 +42,8 @@ class RlweSecAgg
 {
 
 private:
-  std::unique_ptr<const rlwe::RlweContext<ModularInt>> _context_ptr; 
+  std::unique_ptr<const rlwe::RlweContext<ModularInt>> _context_ptr_q; 
+  std::unique_ptr<const rlwe::RlweContext<ModularInt>> _context_ptr_p;
   std::vector<rlwe::Polynomial<ModularInt>> _as; 
   int _input_size;
   std::string _seed;
@@ -102,15 +104,22 @@ public:
             /*.log_n =*/11,
             /*.log_t =*/log_t,
             /*.variance =*/std::pow(stddev, 2)};
-    ASSERT_OK_AND_ASSIGN(_context_ptr, rlwe::RlweContext<ModularInt>::Create(params));
-    // _context_ptr = _context;
+    ASSERT_OK_AND_ASSIGN(_context_ptr_q, rlwe::RlweContext<ModularInt>::Create(params));
+
+    const auto& params_p = typename rlwe::RlweContext<ModularInt>::Parameters{
+            /*.modulus =*/rlwe::kNewhopeModulus,
+            /*.log_n =*/10,
+            /*.log_t =*/9,
+            /*.variance =*/std::pow(4.5, 2)};
+    ASSERT_OK_AND_ASSIGN(_context_ptr_p, rlwe::RlweContext<ModularInt>::Create(params_p));
+    // _context_ptr_q = _context;
     ASSERT_OK_AND_ASSIGN(auto prng, GetPrg(seed));
 
-    _num_split = _input_size /_context_ptr->GetN() ;
+    _num_split = _input_size /_context_ptr_q->GetN() ;
     for (int i = 0; i < _num_split; i++)
     {
       ASSERT_OK_AND_ASSIGN(auto a, rlwe::SamplePolynomialFromPrng<ModularInt>(
-                                         _context_ptr->GetN(), prng.get(), _context_ptr->GetModulusParams()));
+                                         _context_ptr_q->GetN(), prng.get(), _context_ptr_q->GetModulusParams()));
       _as.push_back(a);
     }
     
@@ -124,8 +133,8 @@ public:
   rlwe::SymmetricRlweKey<ModularInt> SampleKey() {
     ASSERT_OK_AND_ASSIGN(auto prng, GetPrg());
     ASSERT_OK_AND_ASSIGN(auto key, rlwe::SymmetricRlweKey<ModularInt>::Sample(
-        _context_ptr->GetLogN(), _context_ptr->GetVariance(), _context_ptr->GetLogT(),
-        _context_ptr->GetModulusParams(), _context_ptr->GetNttParams(), prng.get()));
+        _context_ptr_q->GetLogN(), _context_ptr_q->GetVariance(), _context_ptr_q->GetLogT(),
+        _context_ptr_q->GetModulusParams(), _context_ptr_q->GetNttParams(), prng.get()));
     return key;
   }
  
@@ -133,18 +142,20 @@ public:
     ASSERT_OK_AND_ASSIGN(auto key, key1.Add(key2));
     return key;
   }
-  rlwe::SymmetricRlweKey<ModularInt> CreateKey(const std::vector<typename ModularInt::Int>& key_vector) {
+  rlwe::SymmetricRlweKey<ModularInt> CreateKey(const std::vector<typename ModularInt::Int>& coeffs_p_int) {
   // Convert the key_vector to a vector of ModularInt
-  std::vector<ModularInt> coeffs;
-  for (auto& coeff : key_vector){
-      ASSERT_OK_AND_ASSIGN(auto tmp, ModularInt::ImportInt(coeff, _context_ptr->GetModulusParams()));
-      coeffs.push_back(tmp);
+  std::vector<ModularInt> coeffs_p;
+
+  for (auto& coeff_p_int : coeffs_p_int){
+      ASSERT_OK_AND_ASSIGN(auto tmp, ModularInt::ImportInt(coeff_p_int, _context_ptr_p->GetModulusParams()));
+      coeffs_p.push_back(tmp);
   }
-  rlwe::Polynomial<ModularInt> poly_key = rlwe::Polynomial<ModularInt>(coeffs);
+  ASSERT_OK_AND_ASSIGN(auto coeffs_q, rlwe::ConvertModulusBalanced(coeffs_p, *_context_ptr_p->GetModulusParams(), *_context_ptr_q->GetModulusParams()));
+  rlwe::Polynomial<ModularInt> poly_key = rlwe::Polynomial<ModularInt>(coeffs_q);
   ASSERT_OK_AND_ASSIGN(auto key,
     rlwe::SymmetricRlweKey<ModularInt>::CreateKey(
-        poly_key, _context_ptr->GetVariance(), _context_ptr->GetLogT(),
-        _context_ptr->GetModulusParams(), _context_ptr->GetNttParams()));
+        poly_key, _context_ptr_q->GetVariance(), _context_ptr_q->GetLogT(),
+        _context_ptr_q->GetModulusParams(), _context_ptr_q->GetNttParams()));
     return key;
   }
 
@@ -156,12 +167,12 @@ public:
     std::vector<rlwe::SymmetricRlweCiphertext<ModularInt>> ciphertexts;
     // Iterate over the plaintexts and encrypt each part
     for (int i = 0; i < _num_split; i++){
-      auto mont = this->ConvertToMontgomery(plaintexts[i], _context_ptr->GetModulusParams());
+      auto mont = this->ConvertToMontgomery(plaintexts[i], _context_ptr_q->GetModulusParams());
       auto plaintext_ntt = rlwe::Polynomial<ModularInt>::ConvertToNtt(
-          mont, _context_ptr->GetNttParams(), _context_ptr->GetModulusParams());
+          mont, _context_ptr_q->GetNttParams(), _context_ptr_q->GetModulusParams());
       
       ASSERT_OK_AND_ASSIGN(auto chipertext, rlwe::Encrypt<ModularInt>(key, plaintext_ntt, _as[i],
-                                        _context_ptr->GetErrorParams(), prng.get()));
+                                        _context_ptr_q->GetErrorParams(), prng.get()));
 
       ciphertexts.push_back(chipertext);
     }
@@ -173,7 +184,7 @@ public:
   for (int i = 0; i < _num_split; i++)
     {
       ASSERT_OK_AND_ASSIGN(std::vector<typename ModularInt::Int> plaintext, rlwe::Decrypt<ModularInt>(key, chipertexts[i]));
-      // Append plaintext to decrypted_chipertext till the position _num_split * _context_ptr->GetN()
+      // Append plaintext to decrypted_chipertext till the position _num_split * _context_ptr_q->GetN()
       decrypted_chipertext.insert(decrypted_chipertext.end(), plaintext.begin(), plaintext.end());
     }
     
@@ -207,14 +218,17 @@ static std::vector<typename ModularInt::Int> SamplePlaintext(
     return plaintext;
   }
 
-static std::vector<typename ModularInt::Int> ConvertKey(
-  rlwe::SymmetricRlweKey<ModularInt> key) {
+std::vector<typename ModularInt::Int> ConvertKey(
+  rlwe::SymmetricRlweKey<ModularInt> coeffs_q) {
 
-  std::vector<typename ModularInt::Int> key_vector;
-  for (int i = 0; i < key.Key().Coeffs().size(); i++){
-    key_vector.push_back(key.Key().Coeffs()[i].ExportInt(key.ModulusParams()));
+  ASSERT_OK_AND_ASSIGN(auto coeffs_p, rlwe::ConvertModulusBalancedOnNttPolynomial(coeffs_q.Key(), *_context_ptr_q->GetModulusParams(), *_context_ptr_q->GetNttParams(), *_context_ptr_p->GetModulusParams(), *_context_ptr_p->GetNttParams()));
+
+  std::vector<typename ModularInt::Int> coeffs_p_int;
+
+  for (int i = 0; i < coeffs_p.Coeffs().size(); i++){
+    coeffs_p_int.push_back(coeffs_p.Coeffs()[i].ExportInt(_context_ptr_q->GetModulusParams()));
   }
-  return key_vector;
+  return coeffs_p_int;
 }
 };
 

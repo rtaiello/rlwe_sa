@@ -102,7 +102,7 @@ static rlwe::StatusOr<std::vector<ModularInt>> SampleFromDiscreteGaussian(
     return absl::InvalidArgumentError("Standard deviation must be non-negative.");
   }
   // Gaussian parameter of the base sampler.
-  using DGSampler = DiscreteGaussianSampler<typename ModularInt::Int>;
+  using DGSampler = DiscreteGaussianSampler<Uint64>;
   RLWE_ASSIGN_OR_RETURN(
       static auto sampler,
       DGSampler::Create(stddev));
@@ -116,6 +116,11 @@ static rlwe::StatusOr<std::vector<ModularInt>> SampleFromDiscreteGaussian(
     typename ModularInt::Int coeff_mod_q = is_negative ? modulus_params->modulus - (static_cast<typename ModularInt::Int>(-coeff) % modulus_params->modulus) : coeff;
     RLWE_ASSIGN_OR_RETURN(coeffs[i],
                            ModularInt::ImportInt(coeff_mod_q, modulus_params));
+    auto tmp = coeffs[i].ExportInt(modulus_params);
+    if (i<10){
+      std::cout << "coeffs[" << i << "] = " << tmp << std::endl;
+    }
+    is_negative = coeff > DGSampler::kNegativeThreshold;               
   }
 
   return coeffs;

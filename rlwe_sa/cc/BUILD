@@ -16,6 +16,7 @@ cc_library(
         "//rlwe_sa/cc/shell_encryption:sample_error",
         "//rlwe_sa/cc/shell_encryption:symmetric_encryption",
         "//rlwe_sa/cc/shell_encryption/prng:single_thread_hkdf_prng",
+        "//rlwe_sa/cc/shell_encryption:modulus_conversion",
         "@com_google_absl//absl/status",
 
     ],

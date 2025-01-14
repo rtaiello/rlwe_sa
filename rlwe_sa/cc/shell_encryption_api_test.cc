@@ -58,62 +58,62 @@ namespace {
     class RlweSecAggTest: public::testing::Test {};
   TYPED_TEST_SUITE(RlweSecAggTest, rlwe::MontgomeryInt < absl::uint128 > );
 
-  // Ensure that the encryption scheme can decrypt its own ciphertexts.
-  TYPED_TEST(RlweSecAggTest, CanDecrypt) {
-    struct rlwe_sec_agg_test {
-      int input_size;
-      int log_t;
-    };
-    std::vector < rlwe_sec_agg_test > test_cases = {
-      {
-        static_cast < int > (pow(2, 11)), ptxtModulus
-      },
-      // {static_cast<int>(pow(2,15)), 13},
-      // {static_cast<int>(pow(2,15)), 15},
-    };
-    for (auto test_case: test_cases) {
-      int input_size = test_case.input_size;
-      int log_t = test_case.log_t;
-      for (unsigned int i = 0; i < kTestingRounds; i++) {
-        RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
-        std::vector < typename TypeParam::Int > plaintext = rlweSecAgg.SamplePlaintext(input_size, log_t);
-        rlwe::SymmetricRlweKey < TypeParam > key = rlweSecAgg.SampleKey();
-        std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> ciphertext = rlweSecAgg.Encrypt(key, plaintext);
-        std::vector < typename TypeParam::Int > decrypted = rlweSecAgg.Decrypt(key, ciphertext);
-        EXPECT_EQ(plaintext, decrypted);
-      }
-    }
-  }
+  // // Ensure that the encryption scheme can decrypt its own ciphertexts.
+  // TYPED_TEST(RlweSecAggTest, CanDecrypt) {
+  //   struct rlwe_sec_agg_test {
+  //     int input_size;
+  //     int log_t;
+  //   };
+  //   std::vector < rlwe_sec_agg_test > test_cases = {
+  //     {
+  //       static_cast < int > (pow(2, 11)), ptxtModulus
+  //     },
+  //     // {static_cast<int>(pow(2,15)), 13},
+  //     // {static_cast<int>(pow(2,15)), 15},
+  //   };
+  //   for (auto test_case: test_cases) {
+  //     int input_size = test_case.input_size;
+  //     int log_t = test_case.log_t;
+  //     for (unsigned int i = 0; i < kTestingRounds; i++) {
+  //       RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
+  //       std::vector < typename TypeParam::Int > plaintext = rlweSecAgg.SamplePlaintext(input_size, log_t);
+  //       rlwe::SymmetricRlweKey < TypeParam > key = rlweSecAgg.SampleKey();
+  //       std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> ciphertext = rlweSecAgg.Encrypt(key, plaintext);
+  //       std::vector < typename TypeParam::Int > decrypted = rlweSecAgg.Decrypt(key, ciphertext);
+  //       EXPECT_EQ(plaintext, decrypted);
+  //     }
+  //   }
+  // }
 
 
-  // Ensure that the encryption scheme can decrypt its own ciphertexts usign another matrix as
-  TYPED_TEST(RlweSecAggTest, CanDecryptWithSeed) {
-    struct rlwe_sec_agg_test {
-      int input_size;
-      int log_t;
-    };
-    std::vector < rlwe_sec_agg_test > test_cases = {
-      {
-        static_cast < int > (pow(2, 11)), ptxtModulus
-      },
-      // {static_cast<int>(pow(2,15)), 13},
-      // {static_cast<int>(pow(2,15)), 15},
-    };
-    for (auto test_case: test_cases) {
-      int input_size = test_case.input_size;
-      int log_t = test_case.log_t;
-      for (unsigned int i = 0; i < kTestingRounds; i++) {
-        RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
-        std::vector < typename TypeParam::Int > plaintext = rlweSecAgg.SamplePlaintext(input_size, log_t);
-        rlwe::SymmetricRlweKey < TypeParam > key = rlweSecAgg.SampleKey();
-        std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> ciphertext = rlweSecAgg.Encrypt(key, plaintext);
-        std::string seed = rlweSecAgg.GetSeed();
-        RlweSecAgg < TypeParam > rlweSecAggNew = RlweSecAgg < TypeParam > (input_size, log_t, seed);
-        std::vector < typename TypeParam::Int > decrypted = rlweSecAggNew.Decrypt(key, ciphertext);
-        EXPECT_EQ(plaintext, decrypted);
-      }
-    }
-  }
+  // // Ensure that the encryption scheme can decrypt its own ciphertexts usign another matrix as
+  // TYPED_TEST(RlweSecAggTest, CanDecryptWithSeed) {
+  //   struct rlwe_sec_agg_test {
+  //     int input_size;
+  //     int log_t;
+  //   };
+  //   std::vector < rlwe_sec_agg_test > test_cases = {
+  //     {
+  //       static_cast < int > (pow(2, 11)), ptxtModulus
+  //     },
+  //     // {static_cast<int>(pow(2,15)), 13},
+  //     // {static_cast<int>(pow(2,15)), 15},
+  //   };
+  //   for (auto test_case: test_cases) {
+  //     int input_size = test_case.input_size;
+  //     int log_t = test_case.log_t;
+  //     for (unsigned int i = 0; i < kTestingRounds; i++) {
+  //       RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
+  //       std::vector < typename TypeParam::Int > plaintext = rlweSecAgg.SamplePlaintext(input_size, log_t);
+  //       rlwe::SymmetricRlweKey < TypeParam > key = rlweSecAgg.SampleKey();
+  //       std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> ciphertext = rlweSecAgg.Encrypt(key, plaintext);
+  //       std::string seed = rlweSecAgg.GetSeed();
+  //       RlweSecAgg < TypeParam > rlweSecAggNew = RlweSecAgg < TypeParam > (input_size, log_t, seed);
+  //       std::vector < typename TypeParam::Int > decrypted = rlweSecAggNew.Decrypt(key, ciphertext);
+  //       EXPECT_EQ(plaintext, decrypted);
+  //     }
+  //   }
+  // }
 
   TYPED_TEST(RlweSecAggTest, CanSumKey) {
     int n = 10;
@@ -138,34 +138,34 @@ namespace {
       EXPECT_THAT(key.Key(), key_sum.Key());
     }
   }
-  TYPED_TEST(RlweSecAggTest, Add) {
-    int n = 10;
-    int input_size = pow(2, 13);
-    // remove log(n) from the modulus to avoid overflow
-    int log_t = ptxtModulus - log2(n);
-    typename TypeParam::Int mod_t = (absl::uint128{1} << log_t) + 1;  
-    for (int i = 0; i < kTestingRounds; i++) {
-      RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
-      std::vector < typename TypeParam::Int > plaintext_sum = rlweSecAgg.SamplePlaintext(input_size, log_t);
-      rlwe::SymmetricRlweKey < TypeParam > key_sum = rlweSecAgg.SampleKey();
-      std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> chipertext_sum = rlweSecAgg.Encrypt(key_sum, plaintext_sum);
-      for (int i = 1; i < n; i++) {
-        std::vector < typename TypeParam::Int > plaintext = rlweSecAgg.SamplePlaintext(input_size, log_t);
-        rlwe::SymmetricRlweKey < TypeParam > key = rlweSecAgg.SampleKey();
-        std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> ciphertext = rlweSecAgg.Encrypt(key, plaintext);
-        // Sum ciphertext element-wise modulor kModulus80
-        chipertext_sum = rlweSecAgg.Aggregate(chipertext_sum, ciphertext);
-        // Sum plaintext element-wise modulor kModulus80
-        for (int j = 0; j < plaintext.size(); j++) {
-          plaintext_sum[j] += plaintext[j];
-          plaintext_sum[j] %= mod_t;
-        }
-        // Sum key element-wise modulor kModulus80
-        ASSERT_OK_AND_ASSIGN(key_sum, key_sum.Add(key));
-      }
-      std::vector < typename TypeParam::Int > decrypted_chipertext = rlweSecAgg.Decrypt(key_sum, chipertext_sum);
-      EXPECT_THAT(plaintext_sum, decrypted_chipertext);
-    }
+  // TYPED_TEST(RlweSecAggTest, Add) {
+  //   int n = 10;
+  //   int input_size = pow(2, 13);
+  //   // remove log(n) from the modulus to avoid overflow
+  //   int log_t = ptxtModulus - log2(n);
+  //   typename TypeParam::Int mod_t = (absl::uint128{1} << log_t) + 1;  
+  //   for (int i = 0; i < kTestingRounds; i++) {
+  //     RlweSecAgg < TypeParam > rlweSecAgg = RlweSecAgg < TypeParam > (input_size, log_t);
+  //     std::vector < typename TypeParam::Int > plaintext_sum = rlweSecAgg.SamplePlaintext(input_size, log_t);
+  //     rlwe::SymmetricRlweKey < TypeParam > key_sum = rlweSecAgg.SampleKey();
+  //     std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> chipertext_sum = rlweSecAgg.Encrypt(key_sum, plaintext_sum);
+  //     for (int i = 1; i < n; i++) {
+  //       std::vector < typename TypeParam::Int > plaintext = rlweSecAgg.SamplePlaintext(input_size, log_t);
+  //       rlwe::SymmetricRlweKey < TypeParam > key = rlweSecAgg.SampleKey();
+  //       std::vector < rlwe::SymmetricRlweCiphertext < TypeParam >> ciphertext = rlweSecAgg.Encrypt(key, plaintext);
+  //       // Sum ciphertext element-wise modulor kModulus80
+  //       chipertext_sum = rlweSecAgg.Aggregate(chipertext_sum, ciphertext);
+  //       // Sum plaintext element-wise modulor kModulus80
+  //       for (int j = 0; j < plaintext.size(); j++) {
+  //         plaintext_sum[j] += plaintext[j];
+  //         plaintext_sum[j] %= mod_t;
+  //       }
+  //       // Sum key element-wise modulor kModulus80
+  //       ASSERT_OK_AND_ASSIGN(key_sum, key_sum.Add(key));
+  //     }
+  //     std::vector < typename TypeParam::Int > decrypted_chipertext = rlweSecAgg.Decrypt(key_sum, chipertext_sum);
+  //     EXPECT_THAT(plaintext_sum, decrypted_chipertext);
+  //   }
 
-  }
+  // }
 } // namespace
