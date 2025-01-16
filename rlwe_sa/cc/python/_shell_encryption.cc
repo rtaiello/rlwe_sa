@@ -112,14 +112,14 @@ namespace rlwe_sa {
         }
         return py_result;
       })
-      .def_static("convert_key", [](rlwe::SymmetricRlweKey < ModularInt > key) {
-        auto result = RlweSecAgg < ModularInt > ::ConvertKey(key);
+      .def("convert_key", [](RlweSecAgg < ModularInt > & self, const rlwe::SymmetricRlweKey < ModularInt > & key) {
+        auto result = self.ConvertKey(key);
         std::vector < py::int_ > py_result;
         for (const absl::uint128 & val: result) {
           py_result.push_back(py::int_(Uint128ToPyInt(val)));
         }
         return py_result;
-      }); // Static function
+      }); // Non-static function
     py::class_ < rlwe::SymmetricRlweKey < ModularInt >> (m, "SymmetricRlweKey");
     py::class_ < rlwe::SymmetricRlweCiphertext < ModularInt >> (m, "SymmetricRlweCiphertext")
       // Add this two method Len and LogModulus

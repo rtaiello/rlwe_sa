@@ -108,7 +108,7 @@ public:
 
     const auto& params_p = typename rlwe::RlweContext<ModularInt>::Parameters{
             /*.modulus =*/rlwe::kNewhopeModulus,
-            /*.log_n =*/10,
+            /*.log_n =*/11,
             /*.log_t =*/9,
             /*.variance =*/std::pow(4.5, 2)};
     ASSERT_OK_AND_ASSIGN(_context_ptr_p, rlwe::RlweContext<ModularInt>::Create(params_p));
@@ -151,10 +151,10 @@ public:
       coeffs_p.push_back(tmp);
   }
   ASSERT_OK_AND_ASSIGN(auto coeffs_q, rlwe::ConvertModulusBalanced(coeffs_p, *_context_ptr_p->GetModulusParams(), *_context_ptr_q->GetModulusParams()));
-  rlwe::Polynomial<ModularInt> poly_key = rlwe::Polynomial<ModularInt>(coeffs_q);
+  rlwe::Polynomial<ModularInt> result = rlwe::Polynomial<ModularInt>::ConvertToNtt(std::move(coeffs_q), _context_ptr_q->GetNttParams(), _context_ptr_q->GetModulusParams());
   ASSERT_OK_AND_ASSIGN(auto key,
     rlwe::SymmetricRlweKey<ModularInt>::CreateKey(
-        poly_key, _context_ptr_q->GetVariance(), _context_ptr_q->GetLogT(),
+        result, _context_ptr_q->GetVariance(), _context_ptr_q->GetLogT(),
         _context_ptr_q->GetModulusParams(), _context_ptr_q->GetNttParams()));
     return key;
   }
@@ -219,14 +219,13 @@ static std::vector<typename ModularInt::Int> SamplePlaintext(
   }
 
 std::vector<typename ModularInt::Int> ConvertKey(
-  rlwe::SymmetricRlweKey<ModularInt> coeffs_q) {
+  rlwe::SymmetricRlweKey<ModularInt> key) {
 
-  ASSERT_OK_AND_ASSIGN(auto coeffs_p, rlwe::ConvertModulusBalancedOnNttPolynomial(coeffs_q.Key(), *_context_ptr_q->GetModulusParams(), *_context_ptr_q->GetNttParams(), *_context_ptr_p->GetModulusParams(), *_context_ptr_p->GetNttParams()));
-
+  std::vector<ModularInt> coeffs_q = key.Key().InverseNtt(_context_ptr_q->GetNttParams(), _context_ptr_q->GetModulusParams());
+  ASSERT_OK_AND_ASSIGN(auto coeffs_p, rlwe::ConvertModulusBalanced(coeffs_q, *_context_ptr_q->GetModulusParams(), *_context_ptr_p->GetModulusParams()));
   std::vector<typename ModularInt::Int> coeffs_p_int;
-
-  for (int i = 0; i < coeffs_p.Coeffs().size(); i++){
-    coeffs_p_int.push_back(coeffs_p.Coeffs()[i].ExportInt(_context_ptr_q->GetModulusParams()));
+  for (int i = 0; i < coeffs_p.size(); i++){
+    coeffs_p_int.push_back(coeffs_p[i].ExportInt(_context_ptr_p->GetModulusParams()));
   }
   return coeffs_p_int;
 }
