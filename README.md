@@ -1,4 +1,3 @@
-Here's a refined version of your text with improved grammar, clarity, and formatting:  
 # Secure Aggregation with Ring LWE
 
 ## Description
