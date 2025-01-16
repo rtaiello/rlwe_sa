@@ -110,8 +110,6 @@ TYPED_TEST(DiscreteGaussianSamplerTest, SampleHasBoundedSize) {
       bool is_negative = x > DGSampler::kNegativeThreshold;
       if (is_negative) {
         EXPECT_LT(-x, expected_bound);
-
-        std::cout << "Original" << x << ", Negative: " << -x << std::endl;
       } else {
         EXPECT_LT(x, expected_bound);
       }

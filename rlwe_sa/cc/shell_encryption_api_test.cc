@@ -86,7 +86,7 @@ namespace {
   }
 
 
-  // Ensure that the encryption scheme can decrypt its own ciphertexts usign another matrix as
+  // // Ensure that the encryption scheme can decrypt its own ciphertexts usign another matrix as
   TYPED_TEST(RlweSecAggTest, CanDecryptWithSeed) {
     struct rlwe_sec_agg_test {
       int input_size;

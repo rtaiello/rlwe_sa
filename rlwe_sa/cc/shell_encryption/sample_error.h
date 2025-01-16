@@ -115,7 +115,7 @@ static rlwe::StatusOr<std::vector<ModularInt>> SampleFromDiscreteGaussian(
     bool is_negative = coeff > DGSampler::kNegativeThreshold;
     typename ModularInt::Int coeff_mod_q = is_negative ? modulus_params->modulus - (static_cast<typename ModularInt::Int>(-coeff) % modulus_params->modulus) : coeff;
     RLWE_ASSIGN_OR_RETURN(coeffs[i],
-                           ModularInt::ImportInt(coeff_mod_q, modulus_params));
+                           ModularInt::ImportInt(coeff_mod_q, modulus_params));        
   }
 
   return coeffs;

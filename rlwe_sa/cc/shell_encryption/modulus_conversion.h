@@ -68,6 +68,7 @@ absl::StatusOr<std::vector<ModularInt>> ConvertModulusBalanced(
       typename ModularInt::Int x = vec_q[i].ExportInt(&mod_params_q);
       RLWE_ASSIGN_OR_RETURN(ModularInt x_p,
                             ModularInt::ImportInt(x, &mod_params_p));
+      typename ModularInt::Int x_p_int = x_p.ExportInt(&mod_params_p);
       if (x > modulus_q_by_2) {
         // Similar to the above when x > q/2, x represents a negative value
         // x - q, but since p < q, its mod-p representation is now

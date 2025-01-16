@@ -120,7 +120,7 @@ absl::Status IterativeGentlemanSande(
     const NttParameters<ModularInt>& ntt_params,
     const typename ModularInt::Params& mod_params) {
   int index_psi_inv = 0;
-  for (int i = 0; i < log_len; i++) {
+  for (int i = 0; i < log_len && index_psi_inv < ntt_params.psis_inv_bitrev_constant.size(); i++) {
     const int half_m = 1 << i;
     const int m = half_m << 1;
     for (int k = 0; k < coeffs.size(); k += m) {
